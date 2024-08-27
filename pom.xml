@@ -22,6 +22,10 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<entur.helpers.version>2.27</entur.helpers.version>
+		<prettier-java.version>2.1.0</prettier-java.version>
+		<prettier-maven-plugin.version>0.21</prettier-maven-plugin.version>
+		<plugin.prettier.goal>write</plugin.prettier.goal>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -34,6 +38,31 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.entur.ror.helpers</groupId>
+			<artifactId>gcp-storage</artifactId>
+			<version>${entur.helpers.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-codec-http2</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.protobuf</groupId>
+					<artifactId>protobuf-lite</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.entur.ror.helpers</groupId>
+			<artifactId>oauth2</artifactId>
+			<version>${entur.helpers.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -42,7 +71,68 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.hubspot.maven.plugins</groupId>
+				<artifactId>prettier-maven-plugin</artifactId>
+				<version>${prettier-maven-plugin.version}</version>
+				<configuration>
+					<prettierJavaVersion>${prettier-java.version}</prettierJavaVersion>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>${plugin.prettier.goal}</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonarsource.scanner.maven</groupId>
+						<artifactId>sonar-maven-plugin</artifactId>
+						<version>${sonar-maven-plugin.version}</version>
+					</plugin>
+					<plugin>
+						<groupId>com.hubspot.maven.plugins</groupId>
+						<artifactId>prettier-maven-plugin</artifactId>
+						<version>${prettier-maven-plugin.version}</version>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.hubspot.maven.plugins</groupId>
+						<artifactId>prettier-maven-plugin</artifactId>
+						<version>${prettier-maven-plugin.version}</version>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>prettierCheck</id>
+			<properties>
+				<!-- In the CI environment we want to validate that code is formatted -->
+				<plugin.prettier.goal>check</plugin.prettier.goal>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>
