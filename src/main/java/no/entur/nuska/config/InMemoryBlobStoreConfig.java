@@ -20,6 +20,9 @@ package no.entur.nuska.config;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import no.entur.nuska.repository.NuskaBlobStoreRepository;
+import no.entur.nuska.repository.NuskaGcsBlobStoreRepository;
+import no.entur.nuska.repository.NuskaInMemoryBlobStoreRepository;
 import org.rutebanken.helper.storage.repository.InMemoryBlobStoreRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,9 +38,9 @@ public class InMemoryBlobStoreConfig {
   }
 
   @Bean
-  public InMemoryBlobStoreRepository inMemoryBlobStoreRepository(
+  public NuskaBlobStoreRepository blobStoreRepository(
     Map<String, Map<String, byte[]>> blobsInContainers
   ) {
-    return new InMemoryBlobStoreRepository(blobsInContainers);
+    return new NuskaInMemoryBlobStoreRepository(blobsInContainers);
   }
 }

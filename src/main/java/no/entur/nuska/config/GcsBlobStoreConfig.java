@@ -17,6 +17,8 @@
 
 package no.entur.nuska.config;
 
+import no.entur.nuska.repository.NuskaBlobStoreRepository;
+import no.entur.nuska.repository.NuskaGcsBlobStoreRepository;
 import org.rutebanken.helper.gcp.repository.GcsBlobStoreRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +36,7 @@ public class GcsBlobStoreConfig {
   private String projectId;
 
   @Bean
-  public GcsBlobStoreRepository gcsBlobStoreRepository() {
-    return new GcsBlobStoreRepository(projectId, credentialPath);
+  public NuskaBlobStoreRepository blobStoreRepository() {
+    return new NuskaGcsBlobStoreRepository(projectId, credentialPath);
   }
 }

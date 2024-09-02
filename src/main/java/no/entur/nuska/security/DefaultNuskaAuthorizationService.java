@@ -1,5 +1,4 @@
 /*
- *
  * Licensed under the EUPL, Version 1.2 or – as soon they will be approved by
  * the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
@@ -15,23 +14,28 @@
  *
  */
 
-package no.entur.nuska.service;
+package no.entur.nuska.security;
 
-import no.entur.nuska.repository.NuskaBlobStoreRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 
-/**
- * Operations on blobs in the nisaba bucket.
- */
-@Service
-public class NisabaBlobStoreService extends AbstractBlobStoreService {
+public class DefaultNuskaAuthorizationService
+  implements NuskaAuthorizationService {
 
-  public NisabaBlobStoreService(
-    @Value("${blobstore.gcs.nisaba.container.name}") String containerName,
-    @Autowired NuskaBlobStoreRepository repository
+  private final AuthorizationService<String> authorizationService;
+
+  public DefaultNuskaAuthorizationService(
+    AuthorizationService<String> authorizationService
   ) {
-    super(containerName, repository);
+    this.authorizationService = authorizationService;
+  }
+
+  @Override
+  public void verifyAdministratorPrivileges() {
+    authorizationService.validateRouteDataAdmin();
+  }
+
+  @Override
+  public void verifyBlockViewerPrivileges(String providerId) {
+    authorizationService.validateViewBlockData(providerId);
   }
 }

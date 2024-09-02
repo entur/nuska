@@ -1,7 +1,5 @@
 package no.entur.nuska;
 
-import java.io.IOException;
-
 public class NuskaException extends RuntimeException {
 
   public NuskaException(String message) {
@@ -12,7 +10,7 @@ public class NuskaException extends RuntimeException {
     super(message, cause);
   }
 
-  public NuskaException(IOException e) {
+  public NuskaException(Exception e) {
     super(e);
   }
 }

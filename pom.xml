@@ -22,12 +22,17 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
-		<entur.helpers.version>2.27</entur.helpers.version>
+		<entur.helpers.version>2.28-SNAPSHOT</entur.helpers.version>
 		<prettier-java.version>2.1.0</prettier-java.version>
 		<prettier-maven-plugin.version>0.21</prettier-maven-plugin.version>
 		<plugin.prettier.goal>write</plugin.prettier.goal>
+		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -63,6 +68,13 @@
 			<artifactId>oauth2</artifactId>
 			<version>${entur.helpers.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-nio</artifactId>
+			<version>0.127.22</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>

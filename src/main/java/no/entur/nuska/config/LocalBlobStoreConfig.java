@@ -17,6 +17,8 @@
 
 package no.entur.nuska.config;
 
+import no.entur.nuska.repository.NuskaBlobStoreRepository;
+import no.entur.nuska.repository.NuskaLocalDiskBlobStoreRepository;
 import org.rutebanken.helper.storage.repository.LocalDiskBlobStoreRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +33,7 @@ public class LocalBlobStoreConfig {
   private String baseFolder;
 
   @Bean
-  public LocalDiskBlobStoreRepository localDiskBlobStoreRepository() {
-    return new LocalDiskBlobStoreRepository(baseFolder);
+  public NuskaBlobStoreRepository blobStoreRepository() {
+    return new NuskaLocalDiskBlobStoreRepository(baseFolder);
   }
 }

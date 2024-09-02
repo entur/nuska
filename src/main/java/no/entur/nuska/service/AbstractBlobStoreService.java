@@ -18,15 +18,15 @@
 package no.entur.nuska.service;
 
 import java.io.InputStream;
-import org.rutebanken.helper.storage.repository.BlobStoreRepository;
+import no.entur.nuska.repository.NuskaBlobStoreRepository;
 
 public abstract class AbstractBlobStoreService {
 
-  protected final BlobStoreRepository repository;
+  protected final NuskaBlobStoreRepository repository;
 
   protected AbstractBlobStoreService(
     String containerName,
-    BlobStoreRepository repository
+    NuskaBlobStoreRepository repository
   ) {
     this.repository = repository;
     this.repository.setContainerName(containerName);
@@ -34,5 +34,9 @@ public abstract class AbstractBlobStoreService {
 
   public InputStream getBlob(String name) {
     return repository.getBlob(name);
+  }
+
+  public InputStream getLatestBlob(String codespace) {
+    return repository.getLatestBlob("imported/" + codespace);
   }
 }
