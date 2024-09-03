@@ -51,10 +51,11 @@ class NuskaController {
       authorizationService.verifyBlockViewerPrivileges(codespace);
       InputStream latestBlob = blobStoreService.getLatestBlob(codespace);
       InputStreamResource resource = new InputStreamResource(latestBlob);
-      return ResponseEntity.ok()
-              .contentLength(latestBlob.readAllBytes().length)
-              .contentType(MediaType.APPLICATION_OCTET_STREAM)
-              .body(resource);
+      return ResponseEntity
+        .ok()
+        .contentLength(latestBlob.readAllBytes().length)
+        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        .body(resource);
     } catch (Exception e) {
       throw new NuskaException(
         "No block viewer privileges for user " + principal.getName()

@@ -1,15 +1,10 @@
 package no.entur.nuska.repository;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
-import no.entur.nuska.NuskaException;
-import org.rutebanken.helper.storage.BlobStoreException;
 import org.rutebanken.helper.storage.repository.LocalDiskBlobStoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +32,7 @@ public class NuskaLocalDiskBlobStoreRepository
         .max(Comparator.comparingLong(File::lastModified));
 
       if (opFile.isPresent()) {
-          return getBlob(opFile.get().getAbsolutePath());
+        return getBlob(opFile.get().getAbsolutePath());
       }
     }
     return null;
