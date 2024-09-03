@@ -47,6 +47,10 @@ class NuskaController {
       throw new NuskaException("No codespace provided");
     }
 
+    // TODO: check that the codespace is a valid codespace in baba.
+    //  Marduk is doing it by caching the codespaces from baba at the startup.
+    //  Do we need to do the same here?
+
     try {
       authorizationService.verifyBlockViewerPrivileges(codespace);
       InputStream latestBlob = blobStoreService.getLatestBlob(codespace);

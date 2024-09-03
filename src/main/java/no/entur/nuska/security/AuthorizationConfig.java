@@ -64,7 +64,7 @@ public class AuthorizationConfig {
   }
 
   @Bean
-  public NuskaAuthorizationService antuAuthorizationService(
+  public NuskaAuthorizationService nuskaAuthorizationService(
     AuthorizationService<String> authorizationService
   ) {
     return new DefaultNuskaAuthorizationService(authorizationService);
