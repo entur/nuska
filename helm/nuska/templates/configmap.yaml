@@ -21,9 +21,10 @@ data:
     management.health.pubsub.enabled=false
 
     # Logging
-    logging.level.no.entur=INFO
-    logging.level.org.apache=INFO
     logging.config=classpath:logback.xml
+    logging.level.no.entur=INFO
+    logging.level.no.entur.antu=INFO
+    logging.level.org.apache=INFO
     logging.level.org.apache.camel.component.http.HttpComponent=WARN
 
 kind: ConfigMap
