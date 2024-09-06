@@ -1,0 +1,41 @@
+common:
+  app: nuska
+  shortname: nuska
+  team: ror
+  deployment:
+    replicas: 2
+  ingress:
+    enabled: false
+  service:
+    externalPort: 8080
+    internalPort: 8080
+  container:
+    image: <+artifacts.primary.image>
+    cpu: 2
+    memory: 1000
+    memoryLimit: 1500
+    env: []
+    probes:
+      liveness:
+        path: /actuator/health/liveness
+      readiness:
+        path: /actuator/health/readiness
+    prometheus:
+      enabled: true
+      path: /actuator/prometheus
+    volumeMounts:
+      - mountPath: /etc/application-config
+        name: application-config
+        readOnly: true
+    volumes:
+      - configMap:
+          defaultMode: 420
+          name: nuska-application
+        name: application-config
+  postgres:
+    enabled: false
+  configmap:
+    data:
+      TZ: Europe/Oslo
+    enabled: true
+    toEnv: true

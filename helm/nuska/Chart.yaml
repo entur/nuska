@@ -1,0 +1,17 @@
+apiVersion: v2
+# template for application version, the actual version number is set at build time
+appVersion: "0.1.99.1"
+description: Backend integration
+name: nuska
+version: 0.1.0
+keywords:
+  - nuska
+sources:
+  - https://github.com/entur/nuska
+maintainers:
+  - name: 'team-ror'
+    email: team.rutedata@entur.org
+dependencies:
+  - name: common
+    version: 1.20.0
+    repository: "https://entur.github.io/helm-charts"

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    traffic-type: api
+    {{- include "nuska.common.labels" . | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  name: netex-raw-data-v1
+  namespace: {{ .Release.Namespace }}
+spec:
+  rules:
+    - host: netex-raw-data-v1{{ .Values.ingress.domainName }}
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nuska
+                port:
+                  number: {{ .Values.common.service.externalPort }}
