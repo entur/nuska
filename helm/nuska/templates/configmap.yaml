@@ -7,6 +7,9 @@ data:
     spring.profiles.active=gcs-blobstore
     server.port={{ .Values.common.service.internalPort }}
 
+    # Nuska
+    nuska.security.authorization-service=token-based
+
     # Blobstore
     blobstore.gcs.nisaba.exchange.container.name={{ .Values.gcp.nisaba.exchangeBucketName }}
 
