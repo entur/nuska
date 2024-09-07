@@ -1,6 +1,8 @@
 package no.entur.nuska.repository;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
@@ -29,6 +31,7 @@ public class NuskaLocalDiskBlobStoreRepository
     if (dir.isDirectory()) {
       Optional<File> opFile = Arrays
         .stream(Objects.requireNonNull(dir.listFiles(File::isFile)))
+        .filter(this::isValidFile)
         .max(Comparator.comparingLong(File::lastModified));
 
       if (opFile.isPresent()) {
@@ -36,5 +39,14 @@ public class NuskaLocalDiskBlobStoreRepository
       }
     }
     return null;
+  }
+
+  private boolean isValidFile(File file) {
+    try {
+      Path path = file.toPath();
+      return Files.isRegularFile(path) && !Files.isHidden(path);
+    } catch (IOException e) {
+      return false;
+    }
   }
 }

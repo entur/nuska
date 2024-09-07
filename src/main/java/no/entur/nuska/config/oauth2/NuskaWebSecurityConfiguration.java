@@ -62,18 +62,8 @@ public class NuskaWebSecurityConfiguration {
         authz
           .requestMatchers(
             AntPathRequestMatcher.antMatcher(
-              "/greeting" // TODO: update uri
+              "/download_netex/**"
             )
-          )
-          .permitAll()
-          .requestMatchers(
-            AntPathRequestMatcher.antMatcher(
-              "/services/validation-report/swagger.json" // TODO: update uri
-            )
-          )
-          .permitAll()
-          .requestMatchers(
-            AntPathRequestMatcher.antMatcher("/services/swagger.json")
           )
           .permitAll()
           .requestMatchers(
