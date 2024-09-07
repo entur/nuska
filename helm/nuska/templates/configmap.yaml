@@ -12,7 +12,7 @@ data:
 
     # Blobstore
     blobstore.gcs.project.id=ent-nuska-dev
-    blobstore.gcs.nisaba.exchange.container.name={{ .Values.gcp.nisaba.exchangeBucketName }}
+    blobstore.gcs.nisaba.container.name={{ .Values.gcp.nisaba.exchangeBucketName }}
 
     # Actuator
     management.server.port={{ .Values.common.service.internalPort }}
