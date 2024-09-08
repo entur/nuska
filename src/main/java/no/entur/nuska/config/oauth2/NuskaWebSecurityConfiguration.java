@@ -62,7 +62,7 @@ public class NuskaWebSecurityConfiguration {
         authz
           .requestMatchers(
             AntPathRequestMatcher.antMatcher(
-              "/download_netex/**"
+              "/timetable-data/**"
             )
           )
           .permitAll()

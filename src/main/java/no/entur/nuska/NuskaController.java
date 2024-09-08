@@ -2,7 +2,6 @@ package no.entur.nuska;
 
 import java.io.InputStream;
 import java.nio.file.*;
-import java.security.Principal;
 import no.entur.nuska.security.NuskaAuthorizationService;
 import no.entur.nuska.service.NisabaBlobStoreService;
 import org.springframework.core.io.Resource;
@@ -28,10 +27,9 @@ class NuskaController {
     this.blobStoreService = blobStoreService;
   }
 
-  @GetMapping("download_netex/{codespace}")
-  public ResponseEntity<Resource> downloadNetex(
-    @PathVariable(value = "codespace") String codespace,
-    Principal principal
+  @GetMapping("timetable-data/{codespace}")
+  public ResponseEntity<Resource> downloadTimetableData(
+    @PathVariable(value = "codespace") String codespace
   ) {
     if (codespace == null) {
       throw new NuskaException("No codespace provided");
@@ -42,7 +40,7 @@ class NuskaController {
     //  Do we need to do the same here?
 
     try {
-      authorizationService.verifyBlockViewerPrivileges(codespace);
+      canAccessBlocks(codespace);
       InputStream latestBlob = blobStoreService.getLatestBlob(codespace);
         String nuskaWorkingDirectory = "/Users/mansoor.sajjad/entur-local/working/nuska";
         Path temporaryPath = Paths.get(nuskaWorkingDirectory + "/" + codespace + ".zip");
@@ -58,9 +56,21 @@ class NuskaController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
     } catch (Exception e) {
-      throw new NuskaException(
-        "No block viewer privileges for user " + principal.getName()
-      );
+      throw new NuskaException("Failed to download Netex", e);
+    }
+  }
+
+  private void canAccessBlocks(String codespace) {
+    try {
+      authorizationService.verifyAdministratorPrivileges();
+    } catch (Exception e) {
+      try {
+        authorizationService.verifyBlockViewerPrivileges(codespace);
+      } catch (Exception ex) {
+        throw new NuskaException(
+            "No block viewer privileges"
+        );
+      }
     }
   }
 }
