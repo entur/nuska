@@ -61,9 +61,7 @@ public class NuskaWebSecurityConfiguration {
       .authorizeHttpRequests(authz ->
         authz
           .requestMatchers(
-            AntPathRequestMatcher.antMatcher(
-              "/timetable-data/**"
-            )
+            AntPathRequestMatcher.antMatcher("/timetable-data/**")
           )
           .permitAll()
           .requestMatchers(

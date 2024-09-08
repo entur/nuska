@@ -42,16 +42,27 @@ class NuskaController {
     try {
       canAccessBlocks(codespace);
       InputStream latestBlob = blobStoreService.getLatestBlob(codespace);
-        String nuskaWorkingDirectory = "/Users/mansoor.sajjad/entur-local/working/nuska";
-        Path temporaryPath = Paths.get(nuskaWorkingDirectory + "/" + codespace + ".zip");
-      Files.copy(latestBlob, temporaryPath, StandardCopyOption.REPLACE_EXISTING);
+      String nuskaWorkingDirectory =
+        "/Users/mansoor.sajjad/entur-local/working/nuska";
+      Path temporaryPath = Paths.get(
+        nuskaWorkingDirectory + "/" + codespace + ".zip"
+      );
+      Files.copy(
+        latestBlob,
+        temporaryPath,
+        StandardCopyOption.REPLACE_EXISTING
+      );
 
       Resource resource = new UrlResource(temporaryPath.toUri());
 
       if (resource.exists()) {
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+        return ResponseEntity
+          .ok()
+          .header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\"" + resource.getFilename() + "\""
+          )
+          .body(resource);
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
@@ -67,9 +78,7 @@ class NuskaController {
       try {
         authorizationService.verifyBlockViewerPrivileges(codespace);
       } catch (Exception ex) {
-        throw new NuskaException(
-            "No block viewer privileges"
-        );
+        throw new NuskaException("No block viewer privileges");
       }
     }
   }

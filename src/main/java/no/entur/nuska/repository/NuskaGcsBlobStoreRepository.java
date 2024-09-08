@@ -31,7 +31,10 @@ public class NuskaGcsBlobStoreRepository
   public InputStream getLatestBlob(String path) {
     try (Storage storage = storage()) {
       Optional<Blob> latestBlob = storage
-        .list(containerName() + "/" + path)
+        .list(
+          containerName(),
+          new Storage.BlobListOption[] { Storage.BlobListOption.prefix(path) }
+        )
         .streamAll()
         .max(Comparator.comparing(Blob::getUpdateTimeOffsetDateTime));
 
