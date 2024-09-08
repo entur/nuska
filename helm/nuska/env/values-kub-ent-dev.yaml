@@ -15,3 +15,11 @@ gcp:
   nisaba:
     bucketName: nisaba-dev
     exchangeBucketName: ror-nisaba-exchange-dev
+
+auth0:
+  ror:
+    url: https://ror-entur-dev.eu.auth0.com/
+    audience: https://ror.api.dev.entur.io
+
+  partner:
+    url: https://partner.dev.entur.org/

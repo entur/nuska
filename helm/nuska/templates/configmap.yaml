@@ -31,6 +31,17 @@ data:
     logging.level.org.apache=INFO
     logging.level.org.apache.camel.component.http.HttpComponent=WARN
 
+    #OAuth2 Resource Server
+    nuska.oauth2.resourceserver.auth0.ror.claim.namespace=https://ror.entur.io/
+
+    # OAuth2 Resource Server for Entur Partner tenant
+    nuska.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri={{ .Values.auth0.partner.url }}
+    nuska.oauth2.resourceserver.auth0.entur.partner.jwt.audience={{ .Values.auth0.ror.audience }}
+
+    # OAuth2 Resource Server for RoR tenant
+    nuska.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.auth0.ror.url }}
+    nuska.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.auth0.ror.audience }}
+
 kind: ConfigMap
 metadata:
   name: nuska-application

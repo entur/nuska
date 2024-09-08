@@ -15,3 +15,11 @@ gcp:
   nisaba:
     bucketName: nisaba-production
     exchangeBucketName: ror-nisaba-exchange-production
+
+auth0:
+  ror:
+    url: https://auth2.entur.org/
+    audience: https://ror.api.entur.io
+
+  partner:
+    url: https://partner.entur.org/
