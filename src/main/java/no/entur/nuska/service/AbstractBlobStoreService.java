@@ -19,6 +19,7 @@ package no.entur.nuska.service;
 
 import java.io.InputStream;
 import no.entur.nuska.repository.NuskaBlobStoreRepository;
+import org.springframework.core.io.ByteArrayResource;
 
 public abstract class AbstractBlobStoreService {
 
@@ -36,7 +37,7 @@ public abstract class AbstractBlobStoreService {
     return repository.getBlob(name);
   }
 
-  public InputStream getLatestBlob(String codespace) {
+  public ByteArrayResource getLatestBlob(String codespace) {
     return repository.getLatestBlob("imported/" + codespace);
   }
 }

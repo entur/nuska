@@ -1,8 +1,8 @@
 package no.entur.nuska.repository;
 
-import java.io.InputStream;
 import org.rutebanken.helper.storage.repository.BlobStoreRepository;
+import org.springframework.core.io.ByteArrayResource;
 
 public interface NuskaBlobStoreRepository extends BlobStoreRepository {
-  InputStream getLatestBlob(String path);
+  ByteArrayResource getLatestBlob(String path);
 }

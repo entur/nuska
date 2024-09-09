@@ -9,10 +9,10 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.contrib.nio.testing.LocalStorageHelper;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.stream.IntStream;
 import no.entur.nuska.repository.NuskaGcsBlobStoreRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ByteArrayResource;
 
 class NisabaBlobStoreServiceTest {
 
@@ -25,7 +25,7 @@ class NisabaBlobStoreServiceTest {
       .forEach(i -> {
         BlobInfo blobInfo = BlobInfo
           .newBuilder(
-            BlobId.of("nisaba-exchange/imported/atb", "someFile" + i + ".txt")
+            BlobId.of("nisaba-exchange", "imported/atb/someFile" + i + ".txt")
           )
           .build();
         storage.create(blobInfo, ("A file text " + i).getBytes());
@@ -36,9 +36,11 @@ class NisabaBlobStoreServiceTest {
       new NuskaGcsBlobStoreRepository(storage)
     );
 
-    InputStream inputStream = service.getLatestBlob("atb");
-    assertNotNull(inputStream);
-    byte[] bytes = inputStream.readAllBytes();
+    ByteArrayResource latestBlob = service.getLatestBlob("atb");
+    assertNotNull(latestBlob);
+    assertTrue(latestBlob.exists());
+    assertThat(latestBlob.getFilename(), is("imported/atb/someFile3.txt"));
+    byte[] bytes = latestBlob.getByteArray();
     assertTrue(bytes.length > 0);
     assertThat(new String(bytes), is("A file text 3"));
   }

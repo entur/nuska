@@ -1,12 +1,9 @@
 package no.entur.nuska;
 
-import java.io.InputStream;
-import java.nio.file.*;
 import no.entur.nuska.security.NuskaAuthorizationService;
 import no.entur.nuska.service.NisabaBlobStoreService;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +16,6 @@ class NuskaController {
 
   private final NuskaAuthorizationService authorizationService;
   private final NisabaBlobStoreService blobStoreService;
-
-  @Value("${nuska.workdir:/tmp/nuska}")
-  private String nuskaWorkDir;
 
   public NuskaController(
     NuskaAuthorizationService authorizationService,
@@ -45,31 +39,21 @@ class NuskaController {
 
     try {
       canAccessBlocks(codespace);
-      InputStream latestBlob = blobStoreService.getLatestBlob(codespace);
-      Path temporaryPath = Paths.get(
-        nuskaWorkDir + "/" + codespace + ".zip"
-      );
-      Files.copy(
-        latestBlob,
-        temporaryPath,
-        StandardCopyOption.REPLACE_EXISTING
-      );
+      ByteArrayResource latestBlob = blobStoreService.getLatestBlob(codespace);
 
-      Resource resource = new UrlResource(temporaryPath.toUri());
-
-      if (resource.exists()) {
+      if (latestBlob != null && latestBlob.exists()) {
         return ResponseEntity
           .ok()
           .header(
             HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + resource.getFilename() + "\""
+            "attachment; filename=\"" + latestBlob.getFilename() + "\""
           )
-          .body(resource);
+          .body(latestBlob);
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
     } catch (Exception e) {
-      throw new NuskaException("Failed to download Netex", e);
+      throw new NuskaException("Failed to download timetable data", e);
     }
   }
 
