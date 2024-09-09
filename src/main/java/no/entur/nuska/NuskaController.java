@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.nio.file.*;
 import no.entur.nuska.security.NuskaAuthorizationService;
 import no.entur.nuska.service.NisabaBlobStoreService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,9 @@ class NuskaController {
 
   private final NuskaAuthorizationService authorizationService;
   private final NisabaBlobStoreService blobStoreService;
+
+  @Value("${nuska.workdir:/tmp/nuska}")
+  private String nuskaWorkDir;
 
   public NuskaController(
     NuskaAuthorizationService authorizationService,
@@ -42,10 +46,8 @@ class NuskaController {
     try {
       canAccessBlocks(codespace);
       InputStream latestBlob = blobStoreService.getLatestBlob(codespace);
-      String nuskaWorkingDirectory =
-        "/Users/mansoor.sajjad/entur-local/working/nuska";
       Path temporaryPath = Paths.get(
-        nuskaWorkingDirectory + "/" + codespace + ".zip"
+        nuskaWorkDir + "/" + codespace + ".zip"
       );
       Files.copy(
         latestBlob,
