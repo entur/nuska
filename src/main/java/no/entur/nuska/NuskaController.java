@@ -59,13 +59,9 @@ class NuskaController {
 
   private void canAccessBlocks(String codespace) {
     try {
-      authorizationService.verifyAdministratorPrivileges();
+      authorizationService.verifyBlockViewerPrivileges(codespace);
     } catch (Exception e) {
-      try {
-        authorizationService.verifyBlockViewerPrivileges(codespace);
-      } catch (Exception ex) {
-        throw new NuskaException("No block viewer privileges");
-      }
+      throw new NuskaException("No block viewer privileges");
     }
   }
 }

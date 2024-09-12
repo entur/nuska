@@ -7,9 +7,6 @@ data:
     spring.profiles.active=gcs-blobstore
     server.port={{ .Values.common.service.internalPort }}
 
-    # Nuska
-    nuska.security.authorization-service=token-based
-
     # Blobstore
     blobstore.gcs.project.id=ent-nuska-dev
     blobstore.gcs.nisaba.container.name={{ .Values.gcp.nisaba.exchangeBucketName }}
@@ -33,6 +30,7 @@ data:
 
     #OAuth2 Resource Server
     nuska.oauth2.resourceserver.auth0.ror.claim.namespace=https://ror.entur.io/
+    nuska.oauth2.resourceserver.auth0.partner.organisations={1:'RB', 14:'MOR', 20:'NSB', 22:'RUT', 35:'GOA', 41:'SJN', 56:'FLI', 23:'HUR', 58:'VYX', 59:'VYB', 68:'FAR', 29:'TRO', 74:'CON', 79:'DGR', 60:'HAV'}
 
     # OAuth2 Resource Server for Entur Partner tenant
     nuska.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri={{ .Values.auth0.partner.url }}
@@ -41,6 +39,8 @@ data:
     # OAuth2 Resource Server for RoR tenant
     nuska.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.auth0.ror.url }}
     nuska.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.auth0.ror.audience }}
+
+    netex.export.block.authorization={FAR:'OST,ATB,INN',CON:'TRO,BRA', DGR:'FIN'}
 
 kind: ConfigMap
 metadata:

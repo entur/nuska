@@ -21,8 +21,6 @@ import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.rutebanken.helper.organisation.authorization.DefaultAuthorizationService;
-import org.rutebanken.helper.organisation.authorization.FullAccessAuthorizationService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,10 +35,6 @@ public class AuthorizationConfig {
     return new JwtRoleAssignmentExtractor();
   }
 
-  @ConditionalOnProperty(
-    value = "nuska.security.authorization-service",
-    havingValue = "token-based"
-  )
   @Bean("authorizationService")
   public AuthorizationService<String> tokenBasedAuthorizationService(
     RoleAssignmentExtractor roleAssignmentExtractor
@@ -52,15 +46,6 @@ public class AuthorizationConfig {
           : providerCodespace.toUpperCase(Locale.ROOT),
       roleAssignmentExtractor
     );
-  }
-
-  @ConditionalOnProperty(
-    value = "nuska.security.authorization-service",
-    havingValue = "full-access"
-  )
-  @Bean("authorizationService")
-  public AuthorizationService<Long> fullAccessAuthorizationService() {
-    return new FullAccessAuthorizationService();
   }
 
   @Bean
