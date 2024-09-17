@@ -34,11 +34,11 @@ data:
 
     # OAuth2 Resource Server for Entur Partner tenant
     nuska.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri={{ .Values.auth0.partner.url }}
-    nuska.oauth2.resourceserver.auth0.entur.partner.jwt.audience={{ .Values.auth0.ror.audience }}
+    nuska.oauth2.resourceserver.auth0.entur.partner.jwt.audience={{ .Values.auth0.partner.audience }}
 
-    # OAuth2 Resource Server for RoR tenant
-    nuska.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.auth0.ror.url }}
-    nuska.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.auth0.ror.audience }}
+    # OAuth2 Resource Server for Entur Internal tenant
+    nuska.oauth2.resourceserver.auth0.entur.internal.jwt.issuer-uri={{ .Values.auth0.internal.url }}
+    nuska.oauth2.resourceserver.auth0.entur.internal.jwt.audience={{ .Values.auth0.internal.audience }}
 
     netex.export.block.authorization={FAR:'OST,ATB,INN',CON:'TRO,BRA', DGR:'FIN'}
 

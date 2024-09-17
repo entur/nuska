@@ -17,9 +17,10 @@ gcp:
     exchangeBucketName: ror-nisaba-exchange-production
 
 auth0:
-  ror:
-    url: https://auth2.entur.org/
-    audience: https://ror.api.entur.io
+  internal:
+    url: https://internal.entur.org/
+    audience: https://api.entur.io
 
   partner:
     url: https://partner.entur.org/
+    audience: https://api.entur.io

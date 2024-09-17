@@ -17,9 +17,10 @@ gcp:
     exchangeBucketName: ror-nisaba-exchange-test
 
 auth0:
-  ror:
-    url: https://ror-entur-staging.eu.auth0.com/
-    audience: https://ror.api.staging.entur.io
+  internal:
+    url: https://internal.staging.entur.org/
+    audience: https://api.staging.entur.io
 
   partner:
     url: https://partner.staging.entur.org/
+    audience: https://api.staging.entur.io

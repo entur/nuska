@@ -30,28 +30,24 @@ public class OAuth2Config {
   @Profile("!test")
   public MultiIssuerAuthenticationManagerResolver multiIssuerAuthenticationManagerResolver(
     @Value(
-      "${nuska.oauth2.resourceserver.auth0.entur.partner.jwt.audience:}"
+      "${nuska.oauth2.resourceserver.auth0.entur.partner.jwt.audience}"
     ) String enturPartnerAuth0Audience,
     @Value(
-      "${nuska.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri:}"
+      "${nuska.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri}"
     ) String enturPartnerAuth0Issuer,
     @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.jwt.audience:}"
-    ) String rorAuth0Audience,
+      "${nuska.oauth2.resourceserver.auth0.entur.internal.jwt.audience}"
+    ) String enturInternalAuth0Audience,
     @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.jwt.issuer-uri:}"
-    ) String rorAuth0Issuer,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.claim.namespace:}"
-    ) String rorAuth0ClaimNamespace,
+      "${nuska.oauth2.resourceserver.auth0.entur.internal.jwt.issuer-uri}"
+    ) String enturInternalAuth0Issuer,
     EnturPartnerAuth0RolesClaimAdapter enturPartnerAuth0RolesClaimAdapter
   ) {
     return new NuskaMultiIssuerAuthenticationManagerResolver(
+      enturInternalAuth0Audience,
+      enturInternalAuth0Issuer,
       enturPartnerAuth0Audience,
       enturPartnerAuth0Issuer,
-      rorAuth0Audience,
-      rorAuth0Issuer,
-      rorAuth0ClaimNamespace,
       enturPartnerAuth0RolesClaimAdapter
     );
   }
@@ -67,20 +63,12 @@ public class OAuth2Config {
     ) Map<Long, String> rutebankenOrganisations,
     @Value(
       "${nuska.oauth2.resourceserver.auth0.partner.admin.activated:false}"
-    ) boolean administratorAccessActivated,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.claim.namespace}"
-    ) String rorAuth0ClaimNamespace,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.jwt.audience}"
-    ) String rorAuth0Audience
+    ) boolean administratorAccessActivated
   ) {
     return new EnturPartnerAuth0RolesClaimAdapter(
       authorizedProvidersForNetexBlocksConsumer,
       rutebankenOrganisations,
-      administratorAccessActivated,
-      rorAuth0ClaimNamespace,
-      rorAuth0Audience
+      administratorAccessActivated
     );
   }
 }

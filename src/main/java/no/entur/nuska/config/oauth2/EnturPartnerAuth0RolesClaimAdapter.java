@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.util.*;
 import no.entur.nuska.NuskaException;
 import org.entur.oauth2.RoROAuth2Claims;
-import org.entur.oauth2.RorAuth0RolesClaimAdapter;
 import org.rutebanken.helper.organisation.AuthorizationConstants;
 import org.rutebanken.helper.organisation.RoleAssignment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
+import org.springframework.security.oauth2.jwt.MappedJwtClaimSetConverter;
 
 /**
  * Insert a "role_assignments" claim in the JWT token based on the organisationID claim, for compatibility with the existing
@@ -27,15 +26,14 @@ public class EnturPartnerAuth0RolesClaimAdapter
   private static final ObjectWriter ROLE_ASSIGNMENT_OBJECT_WRITER =
     ObjectMapperFactory.getSharedObjectMapper().writerFor(RoleAssignment.class);
 
-  private final RorAuth0RolesClaimAdapter delegate;
+  private final MappedJwtClaimSetConverter delegate =
+          MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
 
   private final Map<Long, String> rutebankenOrganisations;
 
   private final boolean administratorAccessActivated;
 
   private final Map<String, String> authorizedProvidersForNetexBlocksConsumer;
-
-  private final String rorAuth0Audience;
 
   public EnturPartnerAuth0RolesClaimAdapter(
     @Value(
@@ -46,20 +44,12 @@ public class EnturPartnerAuth0RolesClaimAdapter
     ) Map<Long, String> rutebankenOrganisations,
     @Value(
       "${nuska.oauth2.resourceserver.auth0.partner.admin.activated:false}"
-    ) boolean administratorAccessActivated,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.claim.namespace}"
-    ) String rorAuth0ClaimNamespace,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.jwt.audience}"
-    ) String rorAuth0Audience
+    ) boolean administratorAccessActivated
   ) {
     this.authorizedProvidersForNetexBlocksConsumer =
       authorizedProvidersForNetexBlocksConsumer;
     this.rutebankenOrganisations = rutebankenOrganisations;
     this.administratorAccessActivated = administratorAccessActivated;
-    this.rorAuth0Audience = rorAuth0Audience;
-    this.delegate = new RorAuth0RolesClaimAdapter(rorAuth0ClaimNamespace);
   }
 
   @Override
@@ -67,24 +57,15 @@ public class EnturPartnerAuth0RolesClaimAdapter
     // delegate to the default RoR claim converter
     Map<String, Object> convertedClaims = this.delegate.convert(claims);
 
-    List<String> audiences = (List<String>) convertedClaims.get(
-      OPENID_AUDIENCE_CLAIM
-    );
+    List<String> audiences = (List<String>) claims.get(OPENID_AUDIENCE_CLAIM);
     if (audiences == null) {
       throw new IllegalStateException(
         "The token must contain an audience claim"
       );
     }
 
-    // if the token contains the Ror audience, fall back to the default claim mapping
-    if (audiences.contains(rorAuth0Audience)) {
-      return convertedClaims;
-    }
-
     // otherwise this is an external machine-to-machine token and the custom claim mapping is applied.
-    Long enturOrganisationId = (Long) convertedClaims.get(
-      ORGANISATION_ID_CLAIM
-    );
+    Long enturOrganisationId = (Long) claims.get(ORGANISATION_ID_CLAIM);
     String rutebankenOrganisationId = getRutebankenOrganisationId(
       enturOrganisationId
     );
@@ -117,16 +98,7 @@ public class EnturPartnerAuth0RolesClaimAdapter
       roleAssignments.add(toJSON(netexBlockRoleAssignmentBuilder.build()));
     }
 
-    convertedClaims.put(
-      RoROAuth2Claims.OAUTH2_CLAIM_ROLE_ASSIGNMENTS,
-      roleAssignments
-    );
-
-    // Add a preferred name to be displayed in Ninkasi
-    convertedClaims.put(
-      StandardClaimNames.PREFERRED_USERNAME,
-      rutebankenOrganisationId + " (File transfer via API)"
-    );
+    convertedClaims.put(RoROAuth2Claims.OAUTH2_CLAIM_ROLE_ASSIGNMENTS, roleAssignments);
 
     return convertedClaims;
   }

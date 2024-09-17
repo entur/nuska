@@ -4,7 +4,6 @@ import java.util.List;
 import org.entur.oauth2.AudienceValidator;
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -20,42 +19,33 @@ public class NuskaMultiIssuerAuthenticationManagerResolver
   extends MultiIssuerAuthenticationManagerResolver {
 
   private final EnturPartnerAuth0RolesClaimAdapter enturPartnerAuth0RolesClaimAdapter;
+  private final String enturInternalAuth0Issuer;
+  private final String enturInternalAuth0Audience;
   private final String enturPartnerAuth0Issuer;
   private final String enturPartnerAuth0Audience;
-  private final String rorAuth0Audience;
 
   public NuskaMultiIssuerAuthenticationManagerResolver(
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.partner.jwt.audience}"
-    ) String enturPartnerAuth0Audience,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.partner.jwt.issuer-uri}"
-    ) String enturPartnerAuth0Issuer,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.jwt.audience}"
-    ) String rorAuth0Audience,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.jwt.issuer-uri}"
-    ) String rorAuth0Issuer,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.ror.claim.namespace}"
-    ) String rorAuth0ClaimNamespace,
+    String enturInternalAuth0Audience,
+    String enturInternalAuth0Issuer,
+    String enturPartnerAuth0Audience,
+    String enturPartnerAuth0Issuer,
     EnturPartnerAuth0RolesClaimAdapter enturPartnerAuth0RolesClaimAdapter
   ) {
     super(
-      null,
-      null,
+      enturInternalAuth0Audience,
+      enturInternalAuth0Issuer,
       enturPartnerAuth0Audience,
       enturPartnerAuth0Issuer,
-      rorAuth0Audience,
-      rorAuth0Issuer,
-      rorAuth0ClaimNamespace
+      null,
+      null,
+      null
     );
     this.enturPartnerAuth0RolesClaimAdapter =
       enturPartnerAuth0RolesClaimAdapter;
+    this.enturInternalAuth0Issuer = enturInternalAuth0Issuer;
+    this.enturInternalAuth0Audience = enturInternalAuth0Audience;
     this.enturPartnerAuth0Issuer = enturPartnerAuth0Issuer;
     this.enturPartnerAuth0Audience = enturPartnerAuth0Audience;
-    this.rorAuth0Audience = rorAuth0Audience;
   }
 
   /**
@@ -67,15 +57,27 @@ public class NuskaMultiIssuerAuthenticationManagerResolver
    */
   @Override
   protected JwtDecoder enturPartnerAuth0JwtDecoder() {
+    return getJwtDecoder(enturPartnerAuth0Issuer, enturPartnerAuth0Audience);
+  }
+
+  @Override
+  protected JwtDecoder enturInternalAuth0JwtDecoder() {
+    return getJwtDecoder(enturInternalAuth0Issuer, enturInternalAuth0Audience);
+  }
+
+  private JwtDecoder getJwtDecoder(
+    String enturAuth0Issuer,
+    String enturAuth0Audience
+  ) {
     NimbusJwtDecoder jwtDecoder = JwtDecoders.fromOidcIssuerLocation(
-      enturPartnerAuth0Issuer
+      enturAuth0Issuer
     );
 
     OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(
-      List.of(enturPartnerAuth0Audience, rorAuth0Audience)
+      List.of(enturAuth0Audience)
     );
     OAuth2TokenValidator<Jwt> withIssuer =
-      JwtValidators.createDefaultWithIssuer(enturPartnerAuth0Issuer);
+      JwtValidators.createDefaultWithIssuer(enturAuth0Issuer);
     OAuth2TokenValidator<Jwt> withAudience =
       new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
     jwtDecoder.setJwtValidator(withAudience);
