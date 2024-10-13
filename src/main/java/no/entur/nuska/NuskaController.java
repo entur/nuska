@@ -7,6 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,10 +35,10 @@ class NuskaController {
     }
 
     try {
-      canAccessBlocks(codespace);
+      authorizationService.verifyBlockViewerPrivileges(codespace);
       ByteArrayResource latestBlob = blobStoreService.getLatestBlob(codespace);
 
-      if (latestBlob != null && latestBlob.exists()) {
+      if (latestBlob != null) {
         return ResponseEntity
           .ok()
           .header(
@@ -48,16 +49,11 @@ class NuskaController {
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
-    } catch (Exception e) {
-      throw new NuskaException("Failed to download timetable data", e);
+    } catch (AccessDeniedException e) {
+      throw new AccessDeniedException("No block viewer privileges");
     }
-  }
-
-  private void canAccessBlocks(String codespace) {
-    try {
-      authorizationService.verifyBlockViewerPrivileges(codespace);
-    } catch (Exception e) {
-      throw new NuskaException("No block viewer privileges");
+    catch (Exception e) {
+      throw new NuskaException("Failed to download timetable data", e);
     }
   }
 }
