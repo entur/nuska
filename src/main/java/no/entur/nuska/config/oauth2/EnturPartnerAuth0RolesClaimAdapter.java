@@ -7,6 +7,8 @@ import no.entur.nuska.NuskaException;
 import org.entur.oauth2.RoROAuth2Claims;
 import org.rutebanken.helper.organisation.AuthorizationConstants;
 import org.rutebanken.helper.organisation.RoleAssignment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.jwt.MappedJwtClaimSetConverter;
@@ -19,6 +21,10 @@ import org.springframework.security.oauth2.jwt.MappedJwtClaimSetConverter;
 public class EnturPartnerAuth0RolesClaimAdapter
   implements Converter<Map<String, Object>, Map<String, Object>> {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(
+    EnturPartnerAuth0RolesClaimAdapter.class
+  );
+
   static final String ORG_RUTEBANKEN = "RB";
   static final String OPENID_AUDIENCE_CLAIM = "aud";
   static final String ORGANISATION_ID_CLAIM = "https://entur.io/organisationID";
@@ -27,7 +33,7 @@ public class EnturPartnerAuth0RolesClaimAdapter
     ObjectMapperFactory.getSharedObjectMapper().writerFor(RoleAssignment.class);
 
   private final MappedJwtClaimSetConverter delegate =
-          MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
+    MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
 
   private final Map<Long, String> rutebankenOrganisations;
 
@@ -66,6 +72,9 @@ public class EnturPartnerAuth0RolesClaimAdapter
 
     // otherwise this is an external machine-to-machine token and the custom claim mapping is applied.
     Long enturOrganisationId = (Long) claims.get(ORGANISATION_ID_CLAIM);
+    if (enturOrganisationId == null) {
+      LOGGER.warn("Organisation ID claim is missing in the token.");
+    }
     String rutebankenOrganisationId = getRutebankenOrganisationId(
       enturOrganisationId
     );
@@ -98,7 +107,10 @@ public class EnturPartnerAuth0RolesClaimAdapter
       roleAssignments.add(toJSON(netexBlockRoleAssignmentBuilder.build()));
     }
 
-    convertedClaims.put(RoROAuth2Claims.OAUTH2_CLAIM_ROLE_ASSIGNMENTS, roleAssignments);
+    convertedClaims.put(
+      RoROAuth2Claims.OAUTH2_CLAIM_ROLE_ASSIGNMENTS,
+      roleAssignments
+    );
 
     return convertedClaims;
   }
