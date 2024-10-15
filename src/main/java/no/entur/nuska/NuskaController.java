@@ -2,6 +2,8 @@ package no.entur.nuska;
 
 import no.entur.nuska.security.NuskaAuthorizationService;
 import no.entur.nuska.service.NisabaBlobStoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 class NuskaController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(
+    NuskaController.class
+  );
 
   private final NuskaAuthorizationService authorizationService;
   private final NisabaBlobStoreService blobStoreService;
@@ -30,6 +36,11 @@ class NuskaController {
   public ResponseEntity<Resource> downloadTimetableData(
     @PathVariable(value = "codespace") String codespace
   ) {
+    LOGGER.info(
+      "Received request to download timetable data for codespace: {}",
+      codespace
+    );
+
     if (codespace == null) {
       throw new NuskaException("No codespace provided");
     }
@@ -39,6 +50,10 @@ class NuskaController {
       ByteArrayResource latestBlob = blobStoreService.getLatestBlob(codespace);
 
       if (latestBlob != null) {
+        LOGGER.info(
+          "Successfully downloaded timetable data for codespace: {}",
+          codespace
+        );
         return ResponseEntity
           .ok()
           .header(
