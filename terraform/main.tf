@@ -4,7 +4,7 @@ terraform {
 }
 
 provider "google" {
-  version = "~> 4.84.0"
+  version = "~> 4.85.0"
 }
 
 # add service account as member to the bucket
