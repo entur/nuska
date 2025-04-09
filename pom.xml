@@ -13,7 +13,7 @@
 	<artifactId>nuska</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>nuska</name>
-	<description>API for å tilgjengelig gjøre rå data</description>
+	<description>API to access netex raw data</description>
 	<url>https://github.com/entur/nuska</url>
 
 	<scm>
