@@ -21,7 +21,7 @@ jobs:
           distribution: liberica
           cache: 'maven'
       - run: mvn verify -DskipTests=true
-      - uses: actions/upload-artifact@v4.3.3
+      - uses: actions/upload-artifact@v4.6.2
         with:
           path: target/*.jar
   docker-build:
