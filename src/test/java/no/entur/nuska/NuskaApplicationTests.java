@@ -1,10 +1,11 @@
 package no.entur.nuska;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
-@SpringBootTest
-class NuskaApplicationTests {
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+class NuskaApplicationTests extends NuskaApplication {
 
   @Test
   void contextLoads() {}
