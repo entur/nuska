@@ -1,2 +1,2 @@
 # nuska
-API for å tilgjengelig gjøre rå Netex data.
+API to access raw Netex data.
