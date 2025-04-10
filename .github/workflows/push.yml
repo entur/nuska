@@ -17,7 +17,7 @@ jobs:
           repository: entur/nuska
       - uses: actions/setup-java@v4
         with:
-          java-version: 21.0.1+12
+          java-version: 21
           distribution: liberica
           cache: 'maven'
       - run: mvn verify
