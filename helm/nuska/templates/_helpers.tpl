@@ -33,6 +33,6 @@ release: {{ .Release.Name }}
 team: ror
 slack: talk-ror
 type: backend
-environment: {{.Values.common.env }}
+environment: {{.Values.env }}
 namespace: {{ .Release.Namespace }}
 {{- end }}

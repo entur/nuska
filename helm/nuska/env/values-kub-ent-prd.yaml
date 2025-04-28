@@ -1,13 +1,4 @@
-common:
-  env: prd
-  replicas: 2
-  configmap:
-    data:
-      JDK_JAVA_OPTIONS: -server -Xmx1000m -Xss512k -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
-        -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:ActiveProcessorCount=2
-        -Dspring.config.location=/etc/application-config/application.properties
-        -Dfile.encoding=UTF-8
-
+env: prd
 ingress:
   domainName: -gcp2.entur.io
 
