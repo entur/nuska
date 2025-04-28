@@ -40,7 +40,18 @@ data:
     nuska.oauth2.resourceserver.auth0.entur.internal.jwt.issuer-uri={{ .Values.auth0.internal.url }}
     nuska.oauth2.resourceserver.auth0.entur.internal.jwt.audience={{ .Values.auth0.internal.audience }}
 
+    # OAuth2 Entur Internal Client
+    spring.security.oauth2.client.registration.internal.authorization-grant-type=client_credentials
+    spring.security.oauth2.client.registration.internal.client-id={{ .Values.auth0.client.clientId }}
+    spring.security.oauth2.client.provider.internal.token-uri={{ .Values.auth0.client.tokenUri }}
+    ror.oauth2.client.audience={{ .Values.auth0.client.audience }}
+
     netex.export.block.authorization={FAR:'OST,ATB,INN',CON:'TRO,BRA', DGR:'FIN', VYG:'FLB,GJB,NSB'}
+
+    # Authorization
+    nuska.security.role.assignment.extractor={{ .Values.roleAssignmentExtractor }}
+    user.permission.rest.service.url={{ .Values.baba.service }}/services/organisations/users
+
 
 kind: ConfigMap
 metadata:

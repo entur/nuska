@@ -24,3 +24,13 @@ auth0:
   partner:
     url: https://partner.staging.entur.org/
     audience: https://api.staging.entur.io
+
+  client:
+    clientId: HpqHF7DDzDt9sNF4HSUzohqSPvYICpRO
+    tokenUri: https://internal.staging.entur.org/oauth/token
+    audience: https://ror.api.staging.entur.io
+
+baba:
+  service: http://baba.staging.entur.internal
+
+roleAssignmentExtractor: jwt
