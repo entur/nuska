@@ -18,4 +18,4 @@ spec:
               service:
                 name: nuska
                 port:
-                  number: {{ .Values.common.service.externalPort }}
+                  number: {{ .Values.service.http.externalPort }}

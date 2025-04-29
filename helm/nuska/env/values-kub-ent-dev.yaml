@@ -1,13 +1,4 @@
-common:
-  env: dev
-  replicas: 2
-  configmap:
-    data:
-      JDK_JAVA_OPTIONS: -server -Xmx1000m -Xss512k -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
-        -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:ActiveProcessorCount=2
-        -Dspring.config.location=/etc/application-config/application.properties
-        -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote.port=9999  -Dcom.sun.management.jmxremote.rmi.port=9998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1
-
+env: dev
 ingress:
   domainName: -gcp2.dev.entur.io
 
@@ -24,3 +15,13 @@ auth0:
   partner:
     url: https://partner.dev.entur.org/
     audience: https://api.dev.entur.io
+
+  client:
+    clientId: TBCzQa2gYqEC6bCxPBSdGeclVXM8c7C4
+    tokenUri: https://internal.dev.entur.org/oauth/token
+    audience: https://ror.api.dev.entur.io
+
+baba:
+  service: http://baba.dev.entur.internal
+
+roleAssignmentExtractor: baba

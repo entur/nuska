@@ -1,13 +1,4 @@
-common:
-  env: prd
-  replicas: 2
-  configmap:
-    data:
-      JDK_JAVA_OPTIONS: -server -Xmx1000m -Xss512k -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
-        -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:ActiveProcessorCount=2
-        -Dspring.config.location=/etc/application-config/application.properties
-        -Dfile.encoding=UTF-8
-
+env: prd
 ingress:
   domainName: -gcp2.entur.io
 
@@ -24,3 +15,13 @@ auth0:
   partner:
     url: https://partner.entur.org/
     audience: https://api.entur.io
+
+  client:
+    clientId: s848dGHEirky0wZ2O7M4tsCVuFUbherY
+    tokenUri: https://internal.entur.org/oauth/token
+    audience: https://ror.api.entur.io
+
+baba:
+  service: http://baba.entur.internal
+
+roleAssignmentExtractor: jwt

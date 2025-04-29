@@ -1,13 +1,4 @@
-common:
-  env: tst
-  replicas: 2
-  configmap:
-    data:
-      JDK_JAVA_OPTIONS: -server -Xmx1000m -Xss512k -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
-        -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:ActiveProcessorCount=2
-        -Dspring.config.location=/etc/application-config/application.properties
-        -Dfile.encoding=UTF-8 -Dcom.sun.management.jmxremote.port=9999  -Dcom.sun.management.jmxremote.rmi.port=9998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1
-
+env: tst
 ingress:
   domainName: -gcp2.staging.entur.io
 
@@ -24,3 +15,13 @@ auth0:
   partner:
     url: https://partner.staging.entur.org/
     audience: https://api.staging.entur.io
+
+  client:
+    clientId: HpqHF7DDzDt9sNF4HSUzohqSPvYICpRO
+    tokenUri: https://internal.staging.entur.org/oauth/token
+    audience: https://ror.api.staging.entur.io
+
+baba:
+  service: http://baba.staging.entur.internal
+
+roleAssignmentExtractor: jwt
