@@ -2,10 +2,9 @@ package no.entur.nuska;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
-// TODO: Do we need that exclude? Should be automatically excluded?
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@SpringBootApplication(exclude = { UserDetailsServiceAutoConfiguration.class })
 public class NuskaApplication {
 
   public static void main(String[] args) {
