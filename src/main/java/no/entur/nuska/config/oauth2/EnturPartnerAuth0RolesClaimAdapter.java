@@ -60,6 +60,9 @@ public class EnturPartnerAuth0RolesClaimAdapter
 
   @Override
   public Map<String, Object> convert(Map<String, Object> claims) {
+    Object sub = claims.get("sub");
+    LOGGER.debug("Converting claim for subject {}", sub);
+
     // delegate to the default RoR claim converter
     Map<String, Object> convertedClaims = this.delegate.convert(claims);
 
