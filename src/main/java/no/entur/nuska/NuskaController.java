@@ -67,7 +67,9 @@ class NuskaController {
     } catch (AccessDeniedException e) {
       throw new AccessDeniedException("No block viewer privileges");
     } catch (Exception e) {
-      throw new NuskaException("Failed to download timetable data", e);
+      LOGGER.error("Failed to download timetable data", e);
+      // do not send stacktrace to the client
+      throw new NuskaException("Failed to download timetable data");
     }
   }
 }
