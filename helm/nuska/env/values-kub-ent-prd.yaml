@@ -22,6 +22,6 @@ auth0:
     audience: https://ror.api.entur.io
 
 baba:
-  service: http://baba.entur.internal
+  service: http://baba.prd.entur.internal
 
 roleAssignmentExtractor: baba
