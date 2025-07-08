@@ -40,35 +40,13 @@ public class OAuth2Config {
     ) String enturInternalAuth0Audience,
     @Value(
       "${nuska.oauth2.resourceserver.auth0.entur.internal.jwt.issuer-uri}"
-    ) String enturInternalAuth0Issuer,
-    EnturPartnerAuth0RolesClaimAdapter enturPartnerAuth0RolesClaimAdapter
+    ) String enturInternalAuth0Issuer
   ) {
     return new NuskaMultiIssuerAuthenticationManagerResolver(
       enturInternalAuth0Audience,
       enturInternalAuth0Issuer,
       enturPartnerAuth0Audience,
-      enturPartnerAuth0Issuer,
-      enturPartnerAuth0RolesClaimAdapter
-    );
-  }
-
-  @Bean
-  @Profile("!test")
-  public EnturPartnerAuth0RolesClaimAdapter enturPartnerAuth0RolesClaimAdapter(
-    @Value(
-      "#{${netex.export.block.authorization}}"
-    ) Map<String, String> authorizedProvidersForNetexBlocksConsumer,
-    @Value(
-      "#{${nuska.oauth2.resourceserver.auth0.partner.organisations}}"
-    ) Map<Long, String> rutebankenOrganisations,
-    @Value(
-      "${nuska.oauth2.resourceserver.auth0.partner.admin.activated:false}"
-    ) boolean administratorAccessActivated
-  ) {
-    return new EnturPartnerAuth0RolesClaimAdapter(
-      authorizedProvidersForNetexBlocksConsumer,
-      rutebankenOrganisations,
-      administratorAccessActivated
+      enturPartnerAuth0Issuer
     );
   }
 }

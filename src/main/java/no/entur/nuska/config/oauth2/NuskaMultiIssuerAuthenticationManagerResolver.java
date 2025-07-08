@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.jwt.*;
 public class NuskaMultiIssuerAuthenticationManagerResolver
   extends MultiIssuerAuthenticationManagerResolver {
 
-  private final EnturPartnerAuth0RolesClaimAdapter enturPartnerAuth0RolesClaimAdapter;
   private final String enturInternalAuth0Issuer;
   private final String enturInternalAuth0Audience;
   private final String enturPartnerAuth0Issuer;
@@ -28,8 +27,7 @@ public class NuskaMultiIssuerAuthenticationManagerResolver
     String enturInternalAuth0Audience,
     String enturInternalAuth0Issuer,
     String enturPartnerAuth0Audience,
-    String enturPartnerAuth0Issuer,
-    EnturPartnerAuth0RolesClaimAdapter enturPartnerAuth0RolesClaimAdapter
+    String enturPartnerAuth0Issuer
   ) {
     super(
       enturInternalAuth0Audience,
@@ -40,8 +38,6 @@ public class NuskaMultiIssuerAuthenticationManagerResolver
       null,
       null
     );
-    this.enturPartnerAuth0RolesClaimAdapter =
-      enturPartnerAuth0RolesClaimAdapter;
     this.enturInternalAuth0Issuer = enturInternalAuth0Issuer;
     this.enturInternalAuth0Audience = enturInternalAuth0Audience;
     this.enturPartnerAuth0Issuer = enturPartnerAuth0Issuer;
@@ -50,8 +46,6 @@ public class NuskaMultiIssuerAuthenticationManagerResolver
 
   /**
    * Build a @{@link JwtDecoder} for Entur Partner Auth0 tenant.
-   * To ensure compatibility with the existing authorization process ({@link JwtRoleAssignmentExtractor}), a "roles"
-   * claim is inserted in the token thanks to @{@link EnturPartnerAuth0RolesClaimAdapter}
    *
    * @return a @{@link JwtDecoder} for Auth0.
    */
@@ -81,7 +75,6 @@ public class NuskaMultiIssuerAuthenticationManagerResolver
     OAuth2TokenValidator<Jwt> withAudience =
       new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
     jwtDecoder.setJwtValidator(withAudience);
-    jwtDecoder.setClaimSetConverter(enturPartnerAuth0RolesClaimAdapter);
     return jwtDecoder;
   }
 }
