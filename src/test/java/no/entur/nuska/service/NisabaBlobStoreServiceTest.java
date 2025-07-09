@@ -8,7 +8,6 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.contrib.nio.testing.LocalStorageHelper;
-import java.io.IOException;
 import java.util.stream.IntStream;
 import no.entur.nuska.repository.NuskaGcsBlobStoreRepository;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import org.springframework.core.io.ByteArrayResource;
 class NisabaBlobStoreServiceTest {
 
   @Test
-  void happyTest() throws IOException {
+  void happyTest() {
     Storage storage = LocalStorageHelper.getOptions().getService();
 
     IntStream

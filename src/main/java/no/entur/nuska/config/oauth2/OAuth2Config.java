@@ -16,7 +16,6 @@
 
 package no.entur.nuska.config.oauth2;
 
-import java.util.Map;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

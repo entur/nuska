@@ -2,7 +2,6 @@ package no.entur.nuska.config.oauth2;
 
 import java.util.List;
 import org.entur.oauth2.AudienceValidator;
-import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;

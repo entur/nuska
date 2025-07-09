@@ -19,7 +19,6 @@ package no.entur.nuska.config;
 
 import no.entur.nuska.repository.NuskaBlobStoreRepository;
 import no.entur.nuska.repository.NuskaLocalDiskBlobStoreRepository;
-import org.rutebanken.helper.storage.repository.LocalDiskBlobStoreRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
