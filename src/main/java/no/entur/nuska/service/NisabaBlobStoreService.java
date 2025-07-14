@@ -79,8 +79,9 @@ public class NisabaBlobStoreService {
       .listBlobs(IMPORTED_SUB_PATH + codespace)
       .stream()
       .map(file -> new NetexImport(importKey(file.name()), file.creationDate()))
-      .sorted(Comparator.comparing(NetexImport::creationDate))
+      .sorted(Comparator.comparing(NetexImport::creationDate).reversed())
       .limit(MAX_NUM_IMPORT)
+      .sorted(Comparator.comparing(NetexImport::creationDate))
       .toList();
   }
 
