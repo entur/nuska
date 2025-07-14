@@ -42,7 +42,8 @@ class NisabaBlobStoreServiceTest {
           .build();
         storage.create(blobInfo, ("Content for file " + importKey).getBytes());
         // the time resolution of the blob update field is 1s.
-        waitNSeconds(2);
+        // wait at least 1s to ensure that the creation dates are different.
+        waitMilli(1001);
       });
   }
 
@@ -103,9 +104,9 @@ class NisabaBlobStoreServiceTest {
     );
   }
 
-  private static void waitNSeconds(long seconds) {
+  private static void waitMilli(long milli) {
     try {
-      Thread.sleep(1000 * seconds);
+      Thread.sleep(milli);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }
