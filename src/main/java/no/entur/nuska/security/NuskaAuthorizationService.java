@@ -5,11 +5,6 @@ package no.entur.nuska.security;
  */
 public interface NuskaAuthorizationService {
   /**
-   * Verify that the user has full administrator privileges.
-   */
-  void verifyAdministratorPrivileges();
-
-  /**
    * Verify that the user can read block data for a given provider.
    * Users can download NeTEx blocks data if they have administrator privileges,
    * or if they have editor privileges for this provider

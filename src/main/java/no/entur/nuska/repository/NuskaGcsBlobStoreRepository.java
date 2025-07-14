@@ -35,10 +35,7 @@ public class NuskaGcsBlobStoreRepository
   public ByteArrayResource getLatestBlob(String path) {
     try (Storage storage = storage()) {
       Optional<Blob> latestBlob = storage
-        .list(
-          containerName(),
-          new Storage.BlobListOption[] { Storage.BlobListOption.prefix(path) }
-        )
+        .list(containerName(), Storage.BlobListOption.prefix(path))
         .streamAll()
         .max(Comparator.comparing(Blob::getUpdateTimeOffsetDateTime));
 

@@ -30,11 +30,6 @@ public class DefaultNuskaAuthorizationService
   }
 
   @Override
-  public void verifyAdministratorPrivileges() {
-    authorizationService.validateRouteDataAdmin();
-  }
-
-  @Override
   public void verifyBlockViewerPrivileges(String providerId) {
     authorizationService.validateViewBlockData(providerId);
   }
