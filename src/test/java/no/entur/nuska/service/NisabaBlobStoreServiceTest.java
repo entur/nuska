@@ -8,39 +8,106 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.contrib.nio.testing.LocalStorageHelper;
-import java.util.stream.IntStream;
+import java.util.List;
+import java.util.stream.Stream;
 import no.entur.nuska.repository.NuskaGcsBlobStoreRepository;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 
 class NisabaBlobStoreServiceTest {
 
-  @Test
-  void happyTest() {
-    Storage storage = LocalStorageHelper.getOptions().getService();
+  private static final String TEST_CODESPACE = "atb";
+  private static final String IMPORT_KEY_1 = "atb_2021-01-01T00_00_00.01";
+  private static final String IMPORT_KEY_2 = "atb_2022-01-01T00_00_00.01";
+  private static final String IMPORT_KEY_3 = "atb_2023-01-01T00_00_00.01";
 
-    IntStream
-      .rangeClosed(1, 3)
-      .forEach(i -> {
+  private static Storage storage;
+
+  @BeforeAll
+  static void setUp() {
+    storage = LocalStorageHelper.getOptions().getService();
+    Stream
+      .of(IMPORT_KEY_1, IMPORT_KEY_2, IMPORT_KEY_3)
+      .sorted()
+      .forEach(importKey -> {
         BlobInfo blobInfo = BlobInfo
           .newBuilder(
-            BlobId.of("nisaba-exchange", "imported/atb/someFile" + i + ".txt")
+            BlobId.of(
+              "nisaba-exchange",
+              "imported/" + TEST_CODESPACE + "/" + importKey + ".zip"
+            )
           )
           .build();
-        storage.create(blobInfo, ("A file text " + i).getBytes());
+        storage.create(blobInfo, ("Content for file " + importKey).getBytes());
+        // the time resolution of the blob update field is 1s.
+        waitNSeconds(2);
       });
+  }
 
+  @AfterAll
+  static void tearDown() throws Exception {
+    storage.close();
+  }
+
+  @Test
+  void findLatestBlob() {
     NisabaBlobStoreService service = new NisabaBlobStoreService(
       "nisaba-exchange",
       new NuskaGcsBlobStoreRepository(storage)
     );
 
-    ByteArrayResource latestBlob = service.getLatestBlob("atb");
+    ByteArrayResource latestBlob = service.getLatestBlob(TEST_CODESPACE);
     assertNotNull(latestBlob);
     assertTrue(latestBlob.exists());
-    assertThat(latestBlob.getFilename(), is("imported/atb/someFile3.txt"));
+    assertThat(
+      latestBlob.getFilename(),
+      is("imported/" + TEST_CODESPACE + "/" + IMPORT_KEY_3 + ".zip")
+    );
     byte[] bytes = latestBlob.getByteArray();
     assertTrue(bytes.length > 0);
-    assertThat(new String(bytes), is("A file text 3"));
+    assertThat(new String(bytes), is("Content for file " + IMPORT_KEY_3));
+  }
+
+  @Test
+  void getBlob() {
+    NisabaBlobStoreService service = new NisabaBlobStoreService(
+      "nisaba-exchange",
+      new NuskaGcsBlobStoreRepository(storage)
+    );
+
+    ByteArrayResource blob = service.getBlob(TEST_CODESPACE, IMPORT_KEY_2);
+    assertNotNull(blob);
+    assertTrue(blob.exists());
+    assertThat(
+      blob.getFilename(),
+      is("imported/" + TEST_CODESPACE + "/" + IMPORT_KEY_2 + ".zip")
+    );
+    byte[] bytes = blob.getByteArray();
+    assertTrue(bytes.length > 0);
+    assertThat(new String(bytes), is("Content for file " + IMPORT_KEY_2));
+  }
+
+  @Test
+  void listAllBlobs() {
+    NisabaBlobStoreService service = new NisabaBlobStoreService(
+      "nisaba-exchange",
+      new NuskaGcsBlobStoreRepository(storage)
+    );
+
+    List<NetexImport> importList = service.getImportList(TEST_CODESPACE);
+    assertEquals(
+      List.of(IMPORT_KEY_1, IMPORT_KEY_2, IMPORT_KEY_3),
+      importList.stream().map(NetexImport::importKey).toList()
+    );
+  }
+
+  private static void waitNSeconds(long seconds) {
+    try {
+      Thread.sleep(1000 * seconds);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

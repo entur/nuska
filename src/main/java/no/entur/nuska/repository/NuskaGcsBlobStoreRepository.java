@@ -2,7 +2,10 @@ package no.entur.nuska.repository;
 
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import no.entur.nuska.NuskaByteArrayResource;
 import no.entur.nuska.NuskaException;
@@ -53,5 +56,27 @@ public class NuskaGcsBlobStoreRepository
     } catch (Exception e) {
       throw new NuskaException(e);
     }
+  }
+
+  @Override
+  public List<BlobStoreFile> listBlobs(String path) {
+    List<BlobStoreFile> files = new ArrayList<>();
+    Iterator<Blob> blobIterator = BlobStoreHelper.listAllBlobsRecursively(
+      storage(),
+      containerName(),
+      path
+    );
+    blobIterator.forEachRemaining(blob ->
+      files.add(
+        new BlobStoreFile(
+          blob.asBlobInfo().getName(),
+          blob.asBlobInfo().getUpdateTimeOffsetDateTime().toInstant()
+        )
+      )
+    );
+    return files
+      .stream()
+      .sorted(Comparator.comparing(BlobStoreFile::creationDate))
+      .toList();
   }
 }
