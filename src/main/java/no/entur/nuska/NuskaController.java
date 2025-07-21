@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,8 +40,16 @@ class NuskaController {
   @GetMapping(value = "timetable-data/{codespace}")
   public ResponseEntity<Resource> downloadTimetableData(
     @PathVariable(value = "codespace") String codespace,
-    @RequestParam(name = "importKey", required = false) String importKey
+    @RequestParam(name = "importKey", required = false) String importKey,
+    @RequestHeader(value = "Accept", required = false) String acceptHeader
   ) {
+    // TODO log Accept header for debugging. To be removed.
+    if (acceptHeader != null) {
+      LOGGER.info("Client accepted content types: {}", acceptHeader);
+    } else {
+      LOGGER.info("Client did not specify Accept header.");
+    }
+
     new RequestValidator(codespace, importKey).validate();
 
     LOGGER.info(
