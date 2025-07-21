@@ -36,10 +36,7 @@ class NuskaController {
     this.blobStoreService = blobStoreService;
   }
 
-  @GetMapping(
-    value = "timetable-data/{codespace}",
-    produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-  )
+  @GetMapping(value = "timetable-data/{codespace}")
   public ResponseEntity<Resource> downloadTimetableData(
     @PathVariable(value = "codespace") String codespace,
     @RequestParam(name = "importKey", required = false) String importKey
