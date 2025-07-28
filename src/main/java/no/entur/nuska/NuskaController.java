@@ -37,11 +37,78 @@ class NuskaController {
     this.blobStoreService = blobStoreService;
   }
 
+  /**
+   * @deprecated Use {@link #getDataset(String, String, String)} for an arbitrary version
+   * or {@link #getLatestDataset(String, String)} for the latest version.
+   */
+  @Deprecated
   @GetMapping(value = "timetable-data/{codespace}")
   public ResponseEntity<Resource> downloadTimetableData(
     @PathVariable(value = "codespace") String codespace,
     @RequestParam(name = "importKey", required = false) String importKey,
     @RequestHeader(value = "Accept", required = false) String acceptHeader
+  ) {
+    return downloadDataset(codespace, importKey, acceptHeader);
+  }
+
+  @GetMapping(
+    value = "timetable-data/datasets/{codespace}/version/{importKey}",
+    produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+  )
+  public ResponseEntity<Resource> getDataset(
+    @PathVariable(value = "codespace") String codespace,
+    @PathVariable(name = "importKey", required = false) String importKey,
+    @RequestHeader(value = "Accept", required = false) String acceptHeader
+  ) {
+    return downloadDataset(codespace, importKey, acceptHeader);
+  }
+
+  @GetMapping(
+    value = "timetable-data/datasets/{codespace}/latest",
+    produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+  )
+  public ResponseEntity<Resource> getLatestDataset(
+    @PathVariable(value = "codespace") String codespace,
+    @RequestHeader(value = "Accept", required = false) String acceptHeader
+  ) {
+    return downloadDataset(codespace, null, acceptHeader);
+  }
+
+  @GetMapping(
+    value = " timetable-data/datasets/{codespace}/versions",
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<List<NetexImport>> getDatasetVersions(
+    @PathVariable(value = "codespace") String codespace
+  ) {
+    new RequestValidator(codespace).validate();
+
+    LOGGER.info(
+      "Received request to list timetable data import for codespace '{}'",
+      codespace
+    );
+
+    try {
+      authorizationService.verifyBlockViewerPrivileges(codespace);
+      List<NetexImport> imports = blobStoreService.getImportList(codespace);
+      if (!imports.isEmpty()) {
+        return ResponseEntity.ok().body(imports);
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      }
+    } catch (AccessDeniedException e) {
+      throw new AccessDeniedException("No block viewer privileges");
+    } catch (Exception e) {
+      LOGGER.error("Failed to download timetable data", e);
+      // do not send stacktrace to the client
+      throw new NuskaException("Failed to download timetable data");
+    }
+  }
+
+  private ResponseEntity<Resource> downloadDataset(
+    String codespace,
+    String importKey,
+    String acceptHeader
   ) {
     // TODO log Accept header for debugging. To be removed.
     if (acceptHeader != null) {
@@ -86,37 +153,6 @@ class NuskaController {
             "attachment; filename=\"" + blob.getFilename() + "\""
           )
           .body(blob);
-      } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-      }
-    } catch (AccessDeniedException e) {
-      throw new AccessDeniedException("No block viewer privileges");
-    } catch (Exception e) {
-      LOGGER.error("Failed to download timetable data", e);
-      // do not send stacktrace to the client
-      throw new NuskaException("Failed to download timetable data");
-    }
-  }
-
-  @GetMapping(
-    value = "timetable-data/{codespace}/imports",
-    produces = MediaType.APPLICATION_JSON_VALUE
-  )
-  public ResponseEntity<List<NetexImport>> getImportList(
-    @PathVariable(value = "codespace") String codespace
-  ) {
-    new RequestValidator(codespace).validate();
-
-    LOGGER.info(
-      "Received request to list timetable data import for codespace '{}'",
-      codespace
-    );
-
-    try {
-      authorizationService.verifyBlockViewerPrivileges(codespace);
-      List<NetexImport> imports = blobStoreService.getImportList(codespace);
-      if (!imports.isEmpty()) {
-        return ResponseEntity.ok().body(imports);
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
