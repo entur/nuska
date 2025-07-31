@@ -21,6 +21,9 @@ data:
     management.endpoints.web.exposure.include=info,health,prometheus
     management.health.pubsub.enabled=false
 
+    # OPenAPI
+    springdoc.api-docs.path=/api-docs
+
     # Logging
     logging.config=classpath:logback.xml
     logging.level.no.entur=INFO
