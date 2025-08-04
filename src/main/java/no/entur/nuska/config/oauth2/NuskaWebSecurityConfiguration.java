@@ -60,7 +60,9 @@ public class NuskaWebSecurityConfiguration {
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(authz ->
         authz
-          .requestMatchers(AntPathRequestMatcher.antMatcher("/api-docs"))
+          .requestMatchers(
+            AntPathRequestMatcher.antMatcher("/timetable-data/openapi.json")
+          )
           .permitAll()
           .requestMatchers(
             AntPathRequestMatcher.antMatcher("/actuator/prometheus")

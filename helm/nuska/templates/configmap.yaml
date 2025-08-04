@@ -22,7 +22,7 @@ data:
     management.health.pubsub.enabled=false
 
     # OPenAPI
-    springdoc.api-docs.path=/api-docs
+    springdoc.api-docs.path=/timetable-data/openapi.json
 
     # Logging
     logging.config=classpath:logback.xml
