@@ -41,7 +41,9 @@ public class NisabaBlobStoreService {
   private final NuskaBlobStoreRepository repository;
 
   public NisabaBlobStoreService(
-    @Value("${blobstore.gcs.nisaba.container.name}") String containerName,
+    @Value(
+      "${blobstore.gcs.nisaba.container.name:nisaba-exchange}"
+    ) String containerName,
     NuskaBlobStoreRepository repository
   ) {
     this.repository = repository;

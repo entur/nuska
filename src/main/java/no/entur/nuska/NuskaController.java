@@ -1,6 +1,12 @@
 package no.entur.nuska;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import java.util.List;
@@ -23,6 +29,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@SecurityScheme(
+  type = SecuritySchemeType.HTTP,
+  name = "jwt",
+  scheme = "bearer",
+  bearerFormat = "JWT"
+)
+@OpenAPIDefinition(
+  info = @Info(
+    title = "Timetable data API",
+    version = "1.0",
+    description = "Provide access to the original NeTEx datasets uploaded by data providers"
+  ),
+  servers = {
+    @Server(
+      url = "https://api.dev.entur.io/timetable/v1/timetable-data",
+      description = "Development"
+    ),
+    @Server(
+      url = "https://api.staging.entur.io/timetable/v1/timetable-data",
+      description = "Staging"
+    ),
+    @Server(
+      url = "https://api.entur.io/timetable/v1/timetable-data",
+      description = "Production"
+    ),
+  },
+  security = { @SecurityRequirement(name = "jwt") }
+)
 @Tags(
   value = {
     @Tag(
@@ -54,6 +88,10 @@ class NuskaController {
    */
   @Deprecated
   @GetMapping(value = "timetable-data/{codespace}")
+  @Operation(
+    description = "Return the dataset identified by the given codespace and import key",
+    deprecated = true
+  )
   public ResponseEntity<Resource> downloadTimetableData(
     @PathVariable(value = "codespace") String codespace,
     @RequestParam(name = "importKey", required = false) String importKey,
@@ -67,7 +105,7 @@ class NuskaController {
     produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
   )
   @Operation(
-    summary = "Return the dataset identified by the given codespace and import key"
+    description = "Return the dataset identified by the given codespace and import key"
   )
   public ResponseEntity<Resource> getDataset(
     @PathVariable(value = "codespace") String codespace,
@@ -81,7 +119,7 @@ class NuskaController {
     value = "timetable-data/datasets/{codespace}/latest",
     produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
   )
-  @Operation(summary = "Return the latest dataset for a given codespace")
+  @Operation(description = "Return the latest dataset for a given codespace")
   public ResponseEntity<Resource> getLatestDataset(
     @PathVariable(value = "codespace") String codespace,
     @RequestHeader(value = "Accept", required = false) String acceptHeader
@@ -90,11 +128,11 @@ class NuskaController {
   }
 
   @GetMapping(
-    value = " timetable-data/datasets/{codespace}/versions",
+    value = "timetable-data/datasets/{codespace}/versions",
     produces = MediaType.APPLICATION_JSON_VALUE
   )
   @Operation(
-    summary = "List the import keys for the latest imported datasets for a given codespace"
+    description = "List the import keys for the latest imported datasets for a given codespace"
   )
   public ResponseEntity<List<NetexImport>> getDatasetVersions(
     @PathVariable(value = "codespace") String codespace
