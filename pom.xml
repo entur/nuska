@@ -27,6 +27,8 @@
 		<prettier-maven-plugin.version>0.22</prettier-maven-plugin.version>
 		<plugin.prettier.goal>write</plugin.prettier.goal>
 		<sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
+		<openapi-generator-version>7.11.0</openapi-generator-version>
+
 	</properties>
 	<dependencies>
 
@@ -83,12 +85,6 @@
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
 
-
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.8.9</version>
-		</dependency>
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-core-jakarta</artifactId>
@@ -107,6 +103,13 @@
 
 
 		<!-- Other -->
+
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.6</version>
+
+		</dependency>
 
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
@@ -161,31 +164,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<jvmArguments>
-						-Dmanagement.server.port=9003
-						-Dmanagement.endpoints.enabled-by-default=false
-						-Dmanagement.endpoints.web.exposure.exclude=*
-						-Dmanagement.endpoints.jmx.exposure.exclude=*
-						-Dspring.profiles.active=local-disk-blobstore,test
-						-Dspring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration,org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
-						-Dspringdoc.api-docs.path=/api-docs
-						-Dspringdoc.api-docs.enabled=true
-						-Dspringdoc.paths-to-exclude=/error
-					</jvmArguments>
+					<mainClass>no.entur.nuska.NuskaApplication</mainClass>
 				</configuration>
 				<executions>
-					<execution>
-						<id>pre-integration-test</id>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>post-integration-test</id>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
 					<execution>
 						<goals>
 							<goal>repackage</goal>
@@ -194,22 +175,31 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.springdoc</groupId>
-				<artifactId>springdoc-openapi-maven-plugin</artifactId>
-				<version>1.5</version>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi-generator-version}</version>
 				<executions>
 					<execution>
-						<id>integration-test</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/openapi.json</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>no.entur.nuska.rest.openapi.api</apiPackage>
+							<modelPackage>no.entur.nuska.rest.openapi.model</modelPackage>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<configOptions>
+								<sourceFolder>src/main/java</sourceFolder>
+								<useJakartaEe>true</useJakartaEe>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useSpringController>true</useSpringController>
+								<interfaceOnly>true</interfaceOnly>
+							</configOptions>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<apiDocsUrl>http://localhost:8080/api-docs</apiDocsUrl>
-					<outputFileName>openapi.json</outputFileName>
-					<outputDir>src/main/resources/public</outputDir>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

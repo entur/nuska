@@ -1,71 +1,27 @@
 package no.entur.nuska;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.servers.Server;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
+import java.time.ZoneOffset;
 import java.util.List;
+import no.entur.nuska.model.DatasetImport;
+import no.entur.nuska.rest.openapi.api.TimetableDataApi;
+import no.entur.nuska.rest.openapi.model.NetexImport;
 import no.entur.nuska.security.NuskaAuthorizationService;
-import no.entur.nuska.service.NetexImport;
 import no.entur.nuska.service.NisabaBlobStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@SecurityScheme(
-  type = SecuritySchemeType.HTTP,
-  name = "jwt",
-  scheme = "bearer",
-  bearerFormat = "JWT"
-)
-@OpenAPIDefinition(
-  info = @Info(
-    title = "Timetable data API",
-    version = "1.0",
-    description = "Provide access to the original NeTEx datasets uploaded by data providers"
-  ),
-  servers = {
-    @Server(
-      url = "https://api.dev.entur.io/timetable/v1/timetable-data",
-      description = "Development"
-    ),
-    @Server(
-      url = "https://api.staging.entur.io/timetable/v1/timetable-data",
-      description = "Staging"
-    ),
-    @Server(
-      url = "https://api.entur.io/timetable/v1/timetable-data",
-      description = "Production"
-    ),
-  },
-  security = { @SecurityRequirement(name = "jwt") }
-)
-@Tags(
-  value = {
-    @Tag(
-      name = "TimetableData",
-      description = "Give access to the original NeTEx datasets delivered by data providers"
-    ),
-  }
-)
-class NuskaController {
+@Service
+class NuskaController implements TimetableDataApi {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(
     NuskaController.class
@@ -82,60 +38,54 @@ class NuskaController {
     this.blobStoreService = blobStoreService;
   }
 
+  @GetMapping(
+    value = "/timetable-data/openapi.json",
+    produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Resource> getOpenApiSpec() {
+    ClassPathResource resource = new ClassPathResource("openapi/openapi.json");
+
+    if (!resource.exists()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(resource);
+  }
+
   /**
    * @deprecated Use {@link #getDataset(String, String, String)} for an arbitrary version
    * or {@link #getLatestDataset(String, String)} for the latest version.
    */
+  @Override
   @Deprecated
-  @GetMapping(value = "timetable-data/{codespace}")
-  @Operation(
-    description = "Return the dataset identified by the given codespace and import key",
-    deprecated = true
-  )
   public ResponseEntity<Resource> downloadTimetableData(
-    @PathVariable(value = "codespace") String codespace,
-    @RequestParam(name = "importKey", required = false) String importKey,
-    @RequestHeader(value = "Accept", required = false) String acceptHeader
+    String codespace,
+    String importKey,
+    String acceptHeader
   ) {
     return downloadDataset(codespace, importKey, acceptHeader);
   }
 
-  @GetMapping(
-    value = "timetable-data/datasets/{codespace}/version/{importKey}",
-    produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-  )
-  @Operation(
-    description = "Return the dataset identified by the given codespace and import key"
-  )
+  @Override
   public ResponseEntity<Resource> getDataset(
-    @PathVariable(value = "codespace") String codespace,
-    @PathVariable(name = "importKey", required = false) String importKey,
-    @RequestHeader(value = "Accept", required = false) String acceptHeader
+    String codespace,
+    String importKey,
+    String acceptHeader
   ) {
     return downloadDataset(codespace, importKey, acceptHeader);
   }
 
-  @GetMapping(
-    value = "timetable-data/datasets/{codespace}/latest",
-    produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-  )
-  @Operation(description = "Return the latest dataset for a given codespace")
+  @Override
   public ResponseEntity<Resource> getLatestDataset(
-    @PathVariable(value = "codespace") String codespace,
-    @RequestHeader(value = "Accept", required = false) String acceptHeader
+    String codespace,
+    String acceptHeader
   ) {
     return downloadDataset(codespace, null, acceptHeader);
   }
 
-  @GetMapping(
-    value = "timetable-data/datasets/{codespace}/versions",
-    produces = MediaType.APPLICATION_JSON_VALUE
-  )
-  @Operation(
-    description = "List the import keys for the latest imported datasets for a given codespace"
-  )
+  @Override
   public ResponseEntity<List<NetexImport>> getDatasetVersions(
-    @PathVariable(value = "codespace") String codespace
+    String codespace
   ) {
     new RequestValidator(codespace).validate();
 
@@ -146,9 +96,13 @@ class NuskaController {
 
     try {
       authorizationService.verifyBlockViewerPrivileges(codespace);
-      List<NetexImport> imports = blobStoreService.getImportList(codespace);
+      List<DatasetImport> imports = blobStoreService.getImportList(codespace);
+      List<NetexImport> list = imports
+        .stream()
+        .map(NuskaController::mapNetexImport)
+        .toList();
       if (!imports.isEmpty()) {
-        return ResponseEntity.ok().body(imports);
+        return ResponseEntity.ok().body(list);
       } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
       }
@@ -159,6 +113,15 @@ class NuskaController {
       // do not send stacktrace to the client
       throw new NuskaException("Failed to download timetable data");
     }
+  }
+
+  private static NetexImport mapNetexImport(DatasetImport datasetImport) {
+    NetexImport netexImport = new NetexImport();
+    netexImport.setImportKey(datasetImport.importKey());
+    netexImport.setCreationDate(
+      datasetImport.creationDate().atOffset(ZoneOffset.UTC)
+    );
+    return netexImport;
   }
 
   private ResponseEntity<Resource> downloadDataset(

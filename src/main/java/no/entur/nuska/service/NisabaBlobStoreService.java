@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import no.entur.nuska.NuskaByteArrayResource;
 import no.entur.nuska.NuskaException;
+import no.entur.nuska.model.DatasetImport;
 import no.entur.nuska.repository.NuskaBlobStoreRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -76,14 +77,16 @@ public class NisabaBlobStoreService {
     }
   }
 
-  public List<NetexImport> getImportList(String codespace) {
+  public List<DatasetImport> getImportList(String codespace) {
     return repository
       .listBlobs(IMPORTED_SUB_PATH + codespace)
       .stream()
-      .map(file -> new NetexImport(importKey(file.name()), file.creationDate()))
-      .sorted(Comparator.comparing(NetexImport::creationDate).reversed())
+      .map(file ->
+        new DatasetImport(importKey(file.name()), file.creationDate())
+      )
+      .sorted(Comparator.comparing(DatasetImport::creationDate).reversed())
       .limit(MAX_NUM_IMPORT)
-      .sorted(Comparator.comparing(NetexImport::creationDate))
+      .sorted(Comparator.comparing(DatasetImport::creationDate))
       .toList();
   }
 
