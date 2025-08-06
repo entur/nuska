@@ -32,10 +32,6 @@ jobs:
       - uses: actions/upload-artifact@v4.6.2
         with:
           path: target/*.jar
-      - uses: actions/upload-artifact@v4.6.2
-        with:
-          name: apispec
-          path: src/main/resources/public/openapi.json
       - name: Sonar Scan
         env:
           SONAR_TOKEN: ${{ secrets.ENTUR_SONAR_PASSWORD }}
@@ -56,8 +52,7 @@ jobs:
     uses: entur/gha-api/.github/workflows/lint.yml@v4
     secrets: inherit
     with:
-      artifact: apispec
-      artifact_contents: openapi.json
+      spec: 'src/main/resources/openapi/openapi.json'
       upload_to_bucket: ${{ github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
   docker-build:
     if: github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/main'

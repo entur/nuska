@@ -21,9 +21,6 @@ data:
     management.endpoints.web.exposure.include=info,health,prometheus
     management.health.pubsub.enabled=false
 
-    # OPenAPI
-    springdoc.api-docs.path=/timetable-data/openapi.json
-
     # Logging
     logging.config=classpath:logback.xml
     logging.level.no.entur=INFO

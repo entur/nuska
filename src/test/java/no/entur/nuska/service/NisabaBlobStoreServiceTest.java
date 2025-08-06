@@ -10,6 +10,7 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.contrib.nio.testing.LocalStorageHelper;
 import java.util.List;
 import java.util.stream.Stream;
+import no.entur.nuska.model.DatasetImport;
 import no.entur.nuska.repository.NuskaGcsBlobStoreRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -97,10 +98,10 @@ class NisabaBlobStoreServiceTest {
       new NuskaGcsBlobStoreRepository(storage)
     );
 
-    List<NetexImport> importList = service.getImportList(TEST_CODESPACE);
+    List<DatasetImport> importList = service.getImportList(TEST_CODESPACE);
     assertEquals(
       List.of(IMPORT_KEY_1, IMPORT_KEY_2, IMPORT_KEY_3),
-      importList.stream().map(NetexImport::importKey).toList()
+      importList.stream().map(DatasetImport::importKey).toList()
     );
   }
 
