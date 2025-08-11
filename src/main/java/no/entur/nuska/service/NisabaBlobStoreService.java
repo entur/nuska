@@ -36,7 +36,7 @@ import org.springframework.stereotype.Service;
 public class NisabaBlobStoreService {
 
   private static final String IMPORTED_SUB_PATH = "imported/";
-  private static final int MAX_NUM_IMPORT = 100;
+  private static final int MAX_NUM_IMPORT = 10;
   private static final String ZIP_EXTENSION = ".zip";
 
   private final NuskaBlobStoreRepository repository;
