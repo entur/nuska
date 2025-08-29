@@ -52,20 +52,6 @@ class NuskaController implements TimetableDataApi {
     return ResponseEntity.ok(resource);
   }
 
-  /**
-   * @deprecated Use {@link #getDataset(String, String, String)} for an arbitrary version
-   * or {@link #getLatestDataset(String, String)} for the latest version.
-   */
-  @Override
-  @Deprecated
-  public ResponseEntity<Resource> downloadTimetableData(
-    String codespace,
-    String importKey,
-    String acceptHeader
-  ) {
-    return downloadDataset(codespace, importKey, acceptHeader);
-  }
-
   @Override
   public ResponseEntity<Resource> getDataset(
     String codespace,
