@@ -31,55 +31,6 @@
     }
   ],
   "paths": {
-    "/timetable-data/{codespace}": {
-      "get": {
-        "tags": [
-          "TimetableData"
-        ],
-        "description": "Return the dataset identified by the given codespace and import key",
-        "operationId": "downloadTimetableData",
-        "parameters": [
-          {
-            "name": "codespace",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "importKey",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Accept",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/timetable-data/datasets/{codespace}/versions": {
       "get": {
         "tags": [
