@@ -27,7 +27,7 @@
 		<prettier-maven-plugin.version>0.22</prettier-maven-plugin.version>
 		<plugin.prettier.goal>write</plugin.prettier.goal>
 		<sonar-maven-plugin.version>5.2.0.4988</sonar-maven-plugin.version>
-		<openapi-generator-version>7.15.0</openapi-generator-version>
+		<openapi-generator-version>7.16.0</openapi-generator-version>
 
 	</properties>
 	<dependencies>
