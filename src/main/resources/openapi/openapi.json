@@ -7,16 +7,16 @@
   },
   "servers": [
     {
-      "url": "https://api.dev.entur.io/timetable/v1/timetable-data",
-      "description": "Development"
+      "url": "https://api.entur.io/timetable/v1/timetable-data",
+      "description": "Production"
     },
     {
       "url": "https://api.staging.entur.io/timetable/v1/timetable-data",
       "description": "Staging"
     },
     {
-      "url": "https://api.entur.io/timetable/v1/timetable-data",
-      "description": "Production"
+      "url": "https://api.dev.entur.io/timetable/v1/timetable-data",
+      "description": "Development"
     }
   ],
   "security": [
@@ -36,12 +36,14 @@
         "tags": [
           "TimetableData"
         ],
+        "summary": "List dataset versions",
         "description": "List the import keys for the latest imported datasets for a given codespace",
         "operationId": "getDatasetVersions",
         "parameters": [
           {
             "name": "codespace",
             "in": "path",
+            "description": "The codespace identifier for the data provider",
             "required": true,
             "schema": {
               "type": "string"
@@ -50,13 +52,108 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully retrieved list of dataset versions",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/NetexImport"
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "summary": "Example response",
+                    "value": [
+                      {
+                        "importKey": "2024-01-15T10:30:00Z",
+                        "creationDate": "2024-01-15T10:30:00.000+00:00"
+                      },
+                      {
+                        "importKey": "2024-01-14T09:15:00Z",
+                        "creationDate": "2024-01-14T09:15:00.000+00:00"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid-codespace": {
+                    "summary": "Invalid codespace",
+                    "value": {
+                      "errorCode": "INVALID_CODESPACE",
+                      "message": "The provided codespace is invalid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Missing or invalid JWT",
+                    "value": {
+                      "errorCode": "UNAUTHORIZED",
+                      "message": "Authentication required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "no-access": {
+                    "summary": "No access to codespace",
+                    "value": {
+                      "errorCode": "FORBIDDEN",
+                      "message": "No block viewer privileges"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not-found": {
+                    "summary": "No datasets found",
+                    "value": {
+                      "errorCode": "NOT_FOUND",
+                      "message": "No datasets found for the specified codespace"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "server-error": {
+                    "summary": "Internal error",
+                    "value": {
+                      "errorCode": "INTERNAL_ERROR",
+                      "message": "Failed to download timetable data"
+                    }
                   }
                 }
               }
@@ -70,12 +167,14 @@
         "tags": [
           "TimetableData"
         ],
+        "summary": "Get specific dataset version",
         "description": "Return the dataset identified by the given codespace and import key",
         "operationId": "getDataset",
         "parameters": [
           {
             "name": "codespace",
             "in": "path",
+            "description": "The codespace identifier for the data provider",
             "required": true,
             "schema": {
               "type": "string"
@@ -84,6 +183,7 @@
           {
             "name": "importKey",
             "in": "path",
+            "description": "The unique import key identifying the dataset version",
             "required": true,
             "schema": {
               "type": "string"
@@ -92,6 +192,7 @@
           {
             "name": "Accept",
             "in": "header",
+            "description": "Media type(s) that is/are acceptable for the response",
             "required": false,
             "schema": {
               "type": "string"
@@ -100,12 +201,92 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully retrieved the dataset file",
             "content": {
               "application/octet-stream": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid-params": {
+                    "summary": "Invalid parameters",
+                    "value": {
+                      "errorCode": "INVALID_PARAMETERS",
+                      "message": "Invalid codespace or import key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Missing or invalid JWT",
+                    "value": {
+                      "errorCode": "UNAUTHORIZED",
+                      "message": "Authentication required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "no-access": {
+                    "summary": "No access to codespace",
+                    "value": {
+                      "errorCode": "FORBIDDEN",
+                      "message": "No block viewer privileges"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not-found": {
+                    "summary": "Dataset not found",
+                    "value": {
+                      "errorCode": "NOT_FOUND",
+                      "message": "Dataset not found for the specified codespace and import key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "server-error": {
+                    "summary": "Internal error",
+                    "value": {
+                      "errorCode": "INTERNAL_ERROR",
+                      "message": "Failed to download timetable data"
+                    }
+                  }
                 }
               }
             }
@@ -118,12 +299,14 @@
         "tags": [
           "TimetableData"
         ],
+        "summary": "Get latest dataset",
         "description": "Return the latest dataset for a given codespace",
         "operationId": "getLatestDataset",
         "parameters": [
           {
             "name": "codespace",
             "in": "path",
+            "description": "The codespace identifier for the data provider",
             "required": true,
             "schema": {
               "type": "string"
@@ -132,6 +315,7 @@
           {
             "name": "Accept",
             "in": "header",
+            "description": "Media type(s) that is/are acceptable for the response",
             "required": false,
             "schema": {
               "type": "string"
@@ -140,12 +324,92 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Successfully retrieved the latest dataset file",
             "content": {
               "application/octet-stream": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "invalid-codespace": {
+                    "summary": "Invalid codespace",
+                    "value": {
+                      "errorCode": "INVALID_CODESPACE",
+                      "message": "The provided codespace is invalid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Missing or invalid JWT",
+                    "value": {
+                      "errorCode": "UNAUTHORIZED",
+                      "message": "Authentication required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "no-access": {
+                    "summary": "No access to codespace",
+                    "value": {
+                      "errorCode": "FORBIDDEN",
+                      "message": "No block viewer privileges"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not-found": {
+                    "summary": "No dataset found",
+                    "value": {
+                      "errorCode": "NOT_FOUND",
+                      "message": "No latest dataset found for the specified codespace"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "server-error": {
+                    "summary": "Internal error",
+                    "value": {
+                      "errorCode": "INTERNAL_ERROR",
+                      "message": "Failed to download timetable data"
+                    }
+                  }
                 }
               }
             }
