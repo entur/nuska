@@ -184,7 +184,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/openapi/openapi.json</inputSpec>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<apiPackage>no.entur.nuska.rest.openapi.api</apiPackage>
 							<modelPackage>no.entur.nuska.rest.openapi.model</modelPackage>

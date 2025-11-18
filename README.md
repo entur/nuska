@@ -43,7 +43,7 @@ Nuska is a Spring Boot REST API service that provides authenticated access to or
 1. `GET /timetable-data/datasets/{codespace}/latest` - Download latest dataset
 2. `GET /timetable-data/datasets/{codespace}/version/{importKey}` - Download specific version
 3. `GET /timetable-data/datasets/{codespace}/versions` - List available versions (max 10)
-4. `GET /timetable-data/openapi.json` - OpenAPI specification
+4. `GET /timetable-data/openapi.yaml` - OpenAPI specification
 
 ## Prerequisites
 

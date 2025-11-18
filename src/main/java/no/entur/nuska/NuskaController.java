@@ -39,11 +39,11 @@ class NuskaController implements TimetableDataApi {
   }
 
   @GetMapping(
-    value = "/timetable-data/openapi.json",
+    value = "/timetable-data/openapi.yaml",
     produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Resource> getOpenApiSpec() {
-    ClassPathResource resource = new ClassPathResource("openapi/openapi.json");
+    ClassPathResource resource = new ClassPathResource("openapi/openapi.yaml");
 
     if (!resource.exists()) {
       return ResponseEntity.notFound().build();
