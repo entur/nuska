@@ -13,13 +13,13 @@ servers:
 security:
 - jwt: []
 tags:
-- name: TimetableData
+- name: Raw Timetable Data
   description: Give access to the original NeTEx datasets delivered by data providers
 paths:
   /timetable-data/datasets/{codespace}/versions:
     get:
       tags:
-      - TimetableData
+      - Raw Timetable Data
       summary: List dataset versions
       description: List the import keys for the latest imported datasets for a given
         codespace
@@ -101,7 +101,7 @@ paths:
   /timetable-data/datasets/{codespace}/version/{importKey}:
     get:
       tags:
-      - TimetableData
+      - Raw Timetable Data
       summary: Get specific dataset version
       description: Return the dataset identified by the given codespace and import
         key
@@ -187,7 +187,7 @@ paths:
   /timetable-data/datasets/{codespace}/latest:
     get:
       tags:
-      - TimetableData
+      - Raw Timetable Data
       summary: Get latest dataset
       description: Return the latest dataset for a given codespace
       operationId: getLatestDataset
