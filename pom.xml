@@ -22,7 +22,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
-		<entur.helpers.version>5.47.0</entur.helpers.version>
+		<entur.helpers.version>5.50.0</entur.helpers.version>
 		<prettier-java.version>2.1.0</prettier-java.version>
 		<prettier-maven-plugin.version>0.22</prettier-maven-plugin.version>
 		<plugin.prettier.goal>write</plugin.prettier.goal>
