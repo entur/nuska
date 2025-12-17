@@ -19,7 +19,7 @@ auth0:
   client:
     clientId: s848dGHEirky0wZ2O7M4tsCVuFUbherY
     tokenUri: https://internal.entur.org/oauth/token
-    audience: https://ror.api.entur.io
+    audience: https://api.entur.io
 
 baba:
   service: http://baba.prd.entur.internal

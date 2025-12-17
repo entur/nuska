@@ -19,7 +19,7 @@ auth0:
   client:
     clientId: HpqHF7DDzDt9sNF4HSUzohqSPvYICpRO
     tokenUri: https://internal.staging.entur.org/oauth/token
-    audience: https://ror.api.staging.entur.io
+    audience: https://api.staging.entur.io
 
 baba:
   service: http://baba.tst.entur.internal
