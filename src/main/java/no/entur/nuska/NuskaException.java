@@ -6,10 +6,6 @@ public class NuskaException extends RuntimeException {
     super(message);
   }
 
-  public NuskaException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
   public NuskaException(Exception e) {
     super(e);
   }
