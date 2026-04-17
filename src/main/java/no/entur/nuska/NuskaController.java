@@ -58,7 +58,7 @@ class NuskaController implements TimetableDataApi {
     String importKey,
     String acceptHeader
   ) {
-    return downloadDataset(codespace, importKey, acceptHeader);
+    return downloadDataset(codespace, importKey);
   }
 
   @Override
@@ -66,7 +66,7 @@ class NuskaController implements TimetableDataApi {
     String codespace,
     String acceptHeader
   ) {
-    return downloadDataset(codespace, null, acceptHeader);
+    return downloadDataset(codespace, null);
   }
 
   @Override
@@ -112,16 +112,8 @@ class NuskaController implements TimetableDataApi {
 
   private ResponseEntity<Resource> downloadDataset(
     String codespace,
-    String importKey,
-    String acceptHeader
+    String importKey
   ) {
-    // TODO log Accept header for debugging. To be removed.
-    if (acceptHeader != null) {
-      LOGGER.info("Client accepted content types: {}", acceptHeader);
-    } else {
-      LOGGER.info("Client did not specify Accept header.");
-    }
-
     new RequestValidator(codespace, importKey).validate();
 
     LOGGER.info(
