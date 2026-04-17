@@ -28,6 +28,7 @@
 		<plugin.prettier.goal>write</plugin.prettier.goal>
 		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 		<openapi-generator-version>7.20.0</openapi-generator-version>
+		<swagger-annotations-jakarta.version>2.2.47</swagger-annotations-jakarta.version>
 
 	</properties>
 	<dependencies>
@@ -88,17 +89,17 @@
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-core-jakarta</artifactId>
-			<version>2.2.43</version>
+			<version>${swagger-annotations-jakarta.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-models-jakarta</artifactId>
-			<version>2.2.43</version>
+			<version>${swagger-annotations-jakarta.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations-jakarta</artifactId>
-			<version>2.2.43</version>
+			<version>${swagger-annotations-jakarta.version}</version>
 		</dependency>
 
 
