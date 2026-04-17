@@ -3,6 +3,10 @@ info:
   title: Raw Timetable Data
   description: Provide access to the original NeTEx datasets uploaded by data providers
   version: '1.0'
+  x-entur-metadata:
+    id: raw-timetable-data
+    audience: partner
+    owner: team-ror
 servers:
 - url: https://api.entur.io/timetable/v1/timetable-data
   description: Production
