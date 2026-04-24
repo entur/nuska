@@ -28,7 +28,7 @@
 		<plugin.prettier.goal>write</plugin.prettier.goal>
 		<sonar-maven-plugin.version>5.5.0.6356</sonar-maven-plugin.version>
 		<openapi-generator-version>7.21.0</openapi-generator-version>
-		<swagger-annotations-jakarta.version>2.2.47</swagger-annotations-jakarta.version>
+		<swagger-annotations-jakarta.version>2.2.48</swagger-annotations-jakarta.version>
 
 	</properties>
 	<dependencies>
