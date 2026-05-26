@@ -30,8 +30,10 @@ public class NuskaMultiIssuerAuthenticationManagerResolver
   ) {
     super(
       enturInternalAuth0Audience,
+      null,
       enturInternalAuth0Issuer,
       enturPartnerAuth0Audience,
+      null,
       enturPartnerAuth0Issuer,
       null,
       null,
