@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -60,23 +59,15 @@ public class NuskaWebSecurityConfiguration {
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(authz ->
         authz
-          .requestMatchers(
-            AntPathRequestMatcher.antMatcher("/timetable-data/openapi.yaml")
-          )
+          .requestMatchers("/timetable-data/openapi.yaml")
           .permitAll()
-          .requestMatchers(
-            AntPathRequestMatcher.antMatcher("/actuator/prometheus")
-          )
+          .requestMatchers("/actuator/prometheus")
           .permitAll()
-          .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/health"))
+          .requestMatchers("/actuator/health")
           .permitAll()
-          .requestMatchers(
-            AntPathRequestMatcher.antMatcher("/actuator/health/liveness")
-          )
+          .requestMatchers("/actuator/health/liveness")
           .permitAll()
-          .requestMatchers(
-            AntPathRequestMatcher.antMatcher("/actuator/health/readiness")
-          )
+          .requestMatchers("/actuator/health/readiness")
           .permitAll()
           .anyRequest()
           .authenticated()
