@@ -125,10 +125,18 @@ paths:
           type: string
       - name: Accept
         in: header
-        description: Media type(s) that is/are acceptable for the response
+        description: >-
+          Media type acceptable for the response. The dataset is returned as a
+          binary file, so this must be `application/octet-stream` (or a wildcard
+          such as `*/*`). Any other value — for example `application/zip`, even
+          though the payload is a ZIP archive — results in a `406 Not Acceptable`
+          response. If the header is omitted it defaults to
+          `application/octet-stream`.
         required: false
         schema:
           type: string
+          default: application/octet-stream
+          example: application/octet-stream
       responses:
         '200':
           description: Successfully retrieved the dataset file
@@ -178,6 +186,12 @@ paths:
                     errorCode: NOT_FOUND
                     message: Dataset not found for the specified codespace and import
                       key
+        '406':
+          description: >-
+            Not Acceptable - the media type requested in the `Accept` header
+            cannot be produced. The dataset is only served as
+            `application/octet-stream`; requesting another type such as
+            `application/zip` triggers this response.
         '500':
           description: Internal Server Error
           content:
@@ -204,10 +218,18 @@ paths:
           type: string
       - name: Accept
         in: header
-        description: Media type(s) that is/are acceptable for the response
+        description: >-
+          Media type acceptable for the response. The dataset is returned as a
+          binary file, so this must be `application/octet-stream` (or a wildcard
+          such as `*/*`). Any other value — for example `application/zip`, even
+          though the payload is a ZIP archive — results in a `406 Not Acceptable`
+          response. If the header is omitted it defaults to
+          `application/octet-stream`.
         required: false
         schema:
           type: string
+          default: application/octet-stream
+          example: application/octet-stream
       responses:
         '200':
           description: Successfully retrieved the latest dataset file
@@ -256,6 +278,12 @@ paths:
                   value:
                     errorCode: NOT_FOUND
                     message: No latest dataset found for the specified codespace
+        '406':
+          description: >-
+            Not Acceptable - the media type requested in the `Accept` header
+            cannot be produced. The dataset is only served as
+            `application/octet-stream`; requesting another type such as
+            `application/zip` triggers this response.
         '500':
           description: Internal Server Error
           content:
