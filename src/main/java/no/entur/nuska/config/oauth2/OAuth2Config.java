@@ -17,6 +17,7 @@
 package no.entur.nuska.config.oauth2;
 
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
+import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolverBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,11 +42,11 @@ public class OAuth2Config {
       "${nuska.oauth2.resourceserver.auth0.entur.internal.jwt.issuer-uri}"
     ) String enturInternalAuth0Issuer
   ) {
-    return new NuskaMultiIssuerAuthenticationManagerResolver(
-      enturInternalAuth0Audience,
-      enturInternalAuth0Issuer,
-      enturPartnerAuth0Audience,
-      enturPartnerAuth0Issuer
-    );
+    return new MultiIssuerAuthenticationManagerResolverBuilder()
+      .withEnturInternalAuth0Audience(enturInternalAuth0Audience)
+      .withEnturInternalAuth0Issuer(enturInternalAuth0Issuer)
+      .withEnturPartnerAuth0Audience(enturPartnerAuth0Audience)
+      .withEnturPartnerAuth0Issuer(enturPartnerAuth0Issuer)
+      .build();
   }
 }
