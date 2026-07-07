@@ -75,6 +75,7 @@ jobs:
       git_ref: ${{ inputs.tag }}
       image: ${{ inputs.image_name }}:${{ inputs.tag }}
       chart: helm/nuska
+      image_set_path: "image.identifier"
       namespace: nuska
       release_name: nuska
     secrets: inherit
