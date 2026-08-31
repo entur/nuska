@@ -66,7 +66,7 @@ jobs:
     if: github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     needs: [maven-verify]
-    uses: entur/gha-docker/.github/workflows/build.yml@v1.11.0
+    uses: entur/gha-docker/.github/workflows/build.yml@v1.12.0
     with:
       build_artifact_name: artifact
       build_artifact_path: target
@@ -74,7 +74,7 @@ jobs:
       dockerfile: Dockerfile
   docker-push:
     needs: [docker-build]
-    uses: entur/gha-docker/.github/workflows/push.yml@v1.11.0
+    uses: entur/gha-docker/.github/workflows/push.yml@v1.12.0
     with:
       image_name: nuska
 

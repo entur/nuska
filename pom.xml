@@ -27,7 +27,7 @@
 		<prettier-maven-plugin.version>0.22</prettier-maven-plugin.version>
 		<plugin.prettier.goal>write</plugin.prettier.goal>
 		<sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
-		<openapi-generator-version>7.24.0</openapi-generator-version>
+		<openapi-generator-version>7.25.0</openapi-generator-version>
 		<swagger-annotations-jakarta.version>2.2.54</swagger-annotations-jakarta.version>
 
 	</properties>
@@ -136,7 +136,7 @@
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-nio</artifactId>
-			<version>0.135.0</version>
+			<version>0.136.0</version>
 			<scope>test</scope>
 		</dependency>
 
