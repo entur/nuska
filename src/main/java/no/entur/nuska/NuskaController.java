@@ -3,6 +3,7 @@ package no.entur.nuska;
 import java.time.ZoneOffset;
 import java.util.List;
 import no.entur.nuska.model.DatasetImport;
+import no.entur.nuska.model.NetexDsjVariant;
 import no.entur.nuska.rest.openapi.api.TimetableDataApi;
 import no.entur.nuska.rest.openapi.model.NetexImport;
 import no.entur.nuska.security.NuskaAuthorizationService;
@@ -56,17 +57,19 @@ class NuskaController implements TimetableDataApi {
   public ResponseEntity<Resource> getDataset(
     String codespace,
     String importKey,
+    String dsjCompatibility,
     String acceptHeader
   ) {
-    return downloadDataset(codespace, importKey);
+    return downloadDataset(codespace, importKey, dsjCompatibility);
   }
 
   @Override
   public ResponseEntity<Resource> getLatestDataset(
     String codespace,
+    String dsjCompatibility,
     String acceptHeader
   ) {
-    return downloadDataset(codespace, null);
+    return downloadDataset(codespace, null, dsjCompatibility);
   }
 
   @Override
@@ -112,22 +115,25 @@ class NuskaController implements TimetableDataApi {
 
   private ResponseEntity<Resource> downloadDataset(
     String codespace,
-    String importKey
+    String importKey,
+    String dsjCompatibility
   ) {
     new RequestValidator(codespace, importKey).validate();
+    NetexDsjVariant variant = NetexDsjVariant.resolve(dsjCompatibility);
 
     LOGGER.info(
-      "Received request to download timetable data for codespace '{}'",
-      codespace
+      "Received request to download timetable data for codespace '{}' (dsjcompatibility={})",
+      codespace,
+      dsjCompatibility
     );
 
     try {
       authorizationService.verifyBlockViewerPrivileges(codespace);
       ByteArrayResource blob;
       if (importKey != null) {
-        blob = blobStoreService.getBlob(codespace, importKey);
+        blob = blobStoreService.getBlob(codespace, importKey, variant);
       } else {
-        blob = blobStoreService.getLatestBlob(codespace);
+        blob = blobStoreService.getLatestBlob(codespace, variant);
       }
       if (blob != null) {
         if (importKey == null) {

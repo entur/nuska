@@ -45,6 +45,18 @@ Nuska is a Spring Boot REST API service that provides authenticated access to or
 3. `GET /timetable-data/datasets/{codespace}/versions` - List available versions (max 10)
 4. `GET /timetable-data/openapi.yaml` - OpenAPI specification
 
+### NeTEx version selection during the NeTEx 1.16 transition
+
+NeTEx 1.16 changes the structure of `DatedServiceJourney` in a non backward-compatible way. While consumers migrate, the Marduk import pipeline stores every uploaded dataset in three folders of the nisaba bucket:
+
+* `imported/`: the default folder, holding the variant selected by the import pipeline (NeTEx 1.15 during the transition)
+* `imported-dsj-legacy/`: the dataset downgraded to NeTEx 1.15
+* `imported-dsj-new/`: the dataset as uploaded (NeTEx 1.16 after the upgrade)
+
+The two download endpoints accept the query parameter `dsjcompatibility` to select the variant: `legacy` returns the NeTEx 1.15 copy, `new` returns the NeTEx 1.16 dataset, and omitting the parameter returns the dataset from the default folder. Any other value is rejected with `400 Bad Request`. When the requested variant is not available for a dataset - typically a dataset imported before the transition started - the default folder is used as a fallback.
+
+The version listing endpoint always reads the default folder: the same import keys are used in the three folders.
+
 ## Prerequisites
 
 - Java 21 or higher

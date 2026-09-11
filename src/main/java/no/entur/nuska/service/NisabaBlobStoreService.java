@@ -24,7 +24,10 @@ import java.util.List;
 import no.entur.nuska.NuskaByteArrayResource;
 import no.entur.nuska.NuskaException;
 import no.entur.nuska.model.DatasetImport;
+import no.entur.nuska.model.NetexDsjVariant;
 import no.entur.nuska.repository.NuskaBlobStoreRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -35,7 +38,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class NisabaBlobStoreService {
 
-  private static final String IMPORTED_SUB_PATH = "imported/";
+  private static final Logger LOGGER = LoggerFactory.getLogger(
+    NisabaBlobStoreService.class
+  );
+
   private static final int MAX_NUM_IMPORT = 10;
   private static final String ZIP_EXTENSION = ".zip";
 
@@ -52,34 +58,52 @@ public class NisabaBlobStoreService {
   }
 
   /**
-   * Return the most recent file for the given codespace.
+   * Return the most recent file for the given codespace, in the given NeTEx variant.
    */
-  public ByteArrayResource getLatestBlob(String codespace) {
-    return repository.getLatestBlob(IMPORTED_SUB_PATH + codespace);
+  public ByteArrayResource getLatestBlob(
+    String codespace,
+    NetexDsjVariant variant
+  ) {
+    ByteArrayResource blob = repository.getLatestBlob(
+      variant.subPath() + codespace
+    );
+    if (blob == null && variant != NetexDsjVariant.DEFAULT) {
+      LOGGER.warn(
+        "No dataset for codespace '{}' in the folder '{}', falling back to the default folder",
+        codespace,
+        variant.subPath()
+      );
+      blob =
+        repository.getLatestBlob(NetexDsjVariant.DEFAULT.subPath() + codespace);
+    }
+    return blob;
   }
 
   /**
-   * Return the file identified by the given codespace and import key.
+   * Return the file identified by the given codespace and import key, in the given NeTEx variant.
    * The import key can be retrieved from the Kafka message posted in the topic rutedata-dataset-import-event-xxx
    */
-  public ByteArrayResource getBlob(String codespace, String importKey) {
-    InputStream blob = repository.getBlob(blobName(codespace, importKey));
-    if (blob == null) {
-      return null;
-    }
-    try {
-      return new NuskaByteArrayResource(
-        blob.readAllBytes(),
-        blobName(codespace, importKey)
+  public ByteArrayResource getBlob(
+    String codespace,
+    String importKey,
+    NetexDsjVariant variant
+  ) {
+    ByteArrayResource blob = getBlob(blobName(variant, codespace, importKey));
+    if (blob == null && variant != NetexDsjVariant.DEFAULT) {
+      LOGGER.warn(
+        "No dataset for codespace '{}' and import key '{}' in the folder '{}', falling back to the default folder",
+        codespace,
+        importKey,
+        variant.subPath()
       );
-    } catch (IOException e) {
-      throw new NuskaException(e);
+      blob = getBlob(blobName(NetexDsjVariant.DEFAULT, codespace, importKey));
     }
+    return blob;
   }
 
   public List<DatasetImport> getImportList(String codespace) {
     return repository
-      .listBlobs(IMPORTED_SUB_PATH + codespace)
+      .listBlobs(NetexDsjVariant.DEFAULT.subPath() + codespace)
       .stream()
       .map(file ->
         new DatasetImport(importKey(file.name()), file.creationDate())
@@ -96,7 +120,23 @@ public class NisabaBlobStoreService {
       .replace(ZIP_EXTENSION, "");
   }
 
-  private static String blobName(String codespace, String importKey) {
-    return IMPORTED_SUB_PATH + codespace + '/' + importKey + ZIP_EXTENSION;
+  private ByteArrayResource getBlob(String blobName) {
+    InputStream blob = repository.getBlob(blobName);
+    if (blob == null) {
+      return null;
+    }
+    try {
+      return new NuskaByteArrayResource(blob.readAllBytes(), blobName);
+    } catch (IOException e) {
+      throw new NuskaException(e);
+    }
+  }
+
+  private static String blobName(
+    NetexDsjVariant variant,
+    String codespace,
+    String importKey
+  ) {
+    return variant.subPath() + codespace + '/' + importKey + ZIP_EXTENSION;
   }
 }
