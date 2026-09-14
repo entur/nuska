@@ -123,6 +123,22 @@ paths:
         required: true
         schema:
           type: string
+      - name: dsjcompatibility
+        in: query
+        description: >-
+          Structure of DatedServiceJourney in the returned dataset, during the
+          transition to NeTEx 1.16: `legacy` returns the NeTEx 1.15 copy of the
+          dataset, `new` returns the NeTEx 1.16 dataset. If the parameter is
+          omitted, the dataset is returned in the variant selected as default by
+          the import pipeline. When the requested variant is not available for a
+          given dataset - typically a dataset imported before the transition
+          started - the default variant is returned instead.
+        required: false
+        schema:
+          type: string
+          enum:
+          - legacy
+          - new
       - name: Accept
         in: header
         description: >-
@@ -155,6 +171,12 @@ paths:
                   value:
                     errorCode: INVALID_PARAMETERS
                     message: Invalid codespace or import key
+                invalid-dsjcompatibility:
+                  summary: Invalid dsjcompatibility
+                  value:
+                    errorCode: INVALID_PARAMETERS
+                    message: "Invalid value for parameter dsjcompatibility: 'old',\
+                      \ expected legacy or new"
         '401':
           description: Unauthorized
           content:
@@ -216,6 +238,22 @@ paths:
         required: true
         schema:
           type: string
+      - name: dsjcompatibility
+        in: query
+        description: >-
+          Structure of DatedServiceJourney in the returned dataset, during the
+          transition to NeTEx 1.16: `legacy` returns the NeTEx 1.15 copy of the
+          dataset, `new` returns the NeTEx 1.16 dataset. If the parameter is
+          omitted, the dataset is returned in the variant selected as default by
+          the import pipeline. When the requested variant is not available for a
+          given dataset - typically a dataset imported before the transition
+          started - the default variant is returned instead.
+        required: false
+        schema:
+          type: string
+          enum:
+          - legacy
+          - new
       - name: Accept
         in: header
         description: >-
@@ -248,6 +286,12 @@ paths:
                   value:
                     errorCode: INVALID_CODESPACE
                     message: The provided codespace is invalid
+                invalid-dsjcompatibility:
+                  summary: Invalid dsjcompatibility
+                  value:
+                    errorCode: INVALID_PARAMETERS
+                    message: "Invalid value for parameter dsjcompatibility: 'old',\
+                      \ expected legacy or new"
         '401':
           description: Unauthorized
           content:
