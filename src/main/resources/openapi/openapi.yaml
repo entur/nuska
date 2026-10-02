@@ -177,6 +177,11 @@ paths:
                     errorCode: INVALID_PARAMETERS
                     message: "Invalid value for parameter dsjcompatibility: 'old',\
                       \ expected legacy or new"
+                unknown-parameter:
+                  summary: Unknown query parameter
+                  value:
+                    errorCode: INVALID_PARAMETERS
+                    message: "Unknown query parameter: 'dsjCompatibility'"
         '401':
           description: Unauthorized
           content:
@@ -292,6 +297,11 @@ paths:
                     errorCode: INVALID_PARAMETERS
                     message: "Invalid value for parameter dsjcompatibility: 'old',\
                       \ expected legacy or new"
+                unknown-parameter:
+                  summary: Unknown query parameter
+                  value:
+                    errorCode: INVALID_PARAMETERS
+                    message: "Unknown query parameter: 'dsjCompatibility'"
         '401':
           description: Unauthorized
           content:
