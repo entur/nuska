@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import no.entur.nuska.config.WebMvcConfig;
 import no.entur.nuska.model.NetexDsjVariant;
 import no.entur.nuska.security.NuskaAuthorizationService;
 import no.entur.nuska.service.NisabaBlobStoreService;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.handler.MappedInterceptor;
 
 class UnknownQueryParameterInterceptorTest {
 
@@ -42,9 +44,12 @@ class UnknownQueryParameterInterceptorTest {
     mockMvc =
       MockMvcBuilders
         .standaloneSetup(controller)
-        .addMappedInterceptors(
-          new String[] { "/timetable-data/**" },
-          new UnknownQueryParameterInterceptor()
+        .addInterceptors(
+          new MappedInterceptor(
+            WebMvcConfig.QUERY_PARAMETER_CHECK_INCLUDED_PATHS,
+            WebMvcConfig.QUERY_PARAMETER_CHECK_EXCLUDED_PATHS,
+            new UnknownQueryParameterInterceptor()
+          )
         )
         .build();
   }
@@ -87,5 +92,12 @@ class UnknownQueryParameterInterceptorTest {
     mockMvc
       .perform(get("/timetable-data/datasets/rut/versions").param("limit", "5"))
       .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void testOpenApiSpecAcceptsAnyParameter() throws Exception {
+    mockMvc
+      .perform(get("/timetable-data/openapi.yaml").param("v", "123"))
+      .andExpect(status().isOk());
   }
 }
