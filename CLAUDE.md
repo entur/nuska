@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Nuska is a Spring Boot 3 / Java 21 REST service (`no.entur:nuska`) that gives authenticated access to the original NeTEx datasets uploaded to Entur's `nisaba-exchange` GCS bucket. It inherits from `org.entur.ror:superpom` and depends on the Entur RoR helpers (`storage-gcp-gcs`, `oauth2`, `permission-store-proxy`).
+Nuska is a Spring Boot 4 / Java 25 REST service (`no.entur:nuska`) that gives authenticated access to the original NeTEx datasets uploaded to Entur's `nisaba-exchange` GCS bucket. It inherits from `org.entur.ror:superpom` and depends on the Entur RoR helpers (`storage-gcp-gcs`, `oauth2`, `permission-store-proxy`).
 
 ## Build, test, run
 
@@ -44,4 +44,4 @@ The role-assignment extractor is selected at runtime by `nuska.security.role.ass
 
 ## Deployment
 
-Helm chart lives in `helm/nuska/`; per-env overrides are in `helm/nuska/env/values-kub-ent-{dev,tst,prd}.yaml`. The Dockerfile uses Spring Boot layered jars extracted by `java -Djarmode=tools ... extract --layers` on top of `bellsoft/liberica-openjre-alpine:21.0.10`. CI (`.github/workflows/push.yml`) runs `mvn verify`, uploads the jar, runs SonarCloud, lints/publishes the OpenAPI spec via `entur/gha-api`, then builds and pushes the Docker image via `entur/gha-docker`.
+Helm chart lives in `helm/nuska/`; per-env overrides are in `helm/nuska/env/values-kub-ent-{dev,tst,prd}.yaml`. The Dockerfile uses Spring Boot layered jars extracted by `java -Djarmode=tools ... extract --layers` on top of `bellsoft/liberica-openjre-alpine:25.0.5.0.3-5`. CI (`.github/workflows/push.yml`) runs `mvn verify`, uploads the jar, runs SonarCloud, lints/publishes the OpenAPI spec via `entur/gha-api`, then builds and pushes the Docker image via `entur/gha-docker`.
