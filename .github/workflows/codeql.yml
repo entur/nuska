@@ -16,4 +16,5 @@ jobs:
     uses: entur/gha-security/.github/workflows/code-scan.yml@v2.17.0
     with:
       use_setup_java: true
+      java_version: "25"
     secrets: inherit

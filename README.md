@@ -19,13 +19,13 @@ Nuska is a Spring Boot REST API service that provides authenticated access to or
 
 ## Technology Stack
 
-- **Java 21** - Latest LTS version
+- **Java 25** - Latest LTS version
 - **Spring Boot 3** - Application framework with Jakarta EE
 - **Spring Security** - OAuth2 resource server
 - **Maven** - Build automation
 - **OpenAPI 3.1** - API specification
 - **Google Cloud Storage** - Primary blob storage
-- **Docker** - Containerization with Liberica JRE 21
+- **Docker** - Containerization with Liberica JRE 25
 - **Helm** - Kubernetes deployment
 
 ## Architecture
@@ -59,7 +59,7 @@ The version listing endpoint always reads the default folder: the same import ke
 
 ## Prerequisites
 
-- Java 21 or higher
+- Java 25 or higher
 - Maven 3.6+
 - Access to Google Cloud Storage (for production) or local file system (for development)
 - OAuth2 credentials for authentication
