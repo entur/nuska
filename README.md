@@ -26,6 +26,7 @@ Nuska is a Spring Boot REST API service that provides authenticated access to or
 - **OpenAPI 3.1** - API specification
 - **Google Cloud Storage** - Primary blob storage
 - **Docker** - Containerization with Liberica JRE 25
+- **Helm** - Kubernetes deployment
 
 ## Architecture
 
@@ -94,9 +95,24 @@ Key configuration properties:
 - OAuth2 issuer configuration for authentication
 - Spring Actuator endpoints for health and metrics
 
+## Docker
+
+```bash
+# Build Docker image
+docker build -t nuska:latest .
+
+# Run container
+docker run -p 8080:8080 nuska:latest
+```
+
 ## Deployment
 
-The Docker image, Helm chart and Terraform config live in the separate `nuska-deployment-config` repository, which builds, pushes and deploys the image.
+The service is deployed using Helm charts located in `helm/nuska/`:
+
+```bash
+# Deploy to Kubernetes
+helm install nuska helm/nuska -f helm/nuska/env/values-<env>.yaml
+```
 
 ## Security
 

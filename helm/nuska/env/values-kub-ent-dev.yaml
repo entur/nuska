@@ -1,0 +1,27 @@
+env: dev
+ingress:
+  domainName: -gcp2.dev.entur.io
+
+gcp:
+  nisaba:
+    bucketName: nisaba-dev
+    exchangeBucketName: ror-nisaba-exchange-dev
+
+auth0:
+  internal:
+    url: https://internal.dev.entur.org/
+    audience: https://api.dev.entur.io
+
+  partner:
+    url: https://partner.dev.entur.org/
+    audience: https://api.dev.entur.io
+
+  client:
+    clientId: TBCzQa2gYqEC6bCxPBSdGeclVXM8c7C4
+    tokenUri: https://internal.dev.entur.org/oauth/token
+    audience: https://api.dev.entur.io
+
+baba:
+  service: http://baba.dev.entur.internal
+
+roleAssignmentExtractor: baba
