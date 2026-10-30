@@ -22,7 +22,7 @@ mvn prettier:write                                  # format Java sources
 
 ## Spring profiles (important — nothing works without one of these)
 
-There is **no `application.properties` in `src/main/resources`** — runtime config is supplied by the Helm ConfigMap (`helm/nuska/templates/configmap.yaml`) or the test properties file. At least one blob-store profile must be active:
+There is **no `application.properties` in `src/main/resources`** — runtime config is supplied by the Helm ConfigMap in the `nuska-deployment-config` repository or the test properties file. At least one blob-store profile must be active:
 
 - `gcs-blobstore` — activates `GcsBlobStoreConfig`, wiring `NuskaGcsBlobStoreRepository` (used in all deployed envs).
 - `local-disk-blobstore` — activates `LocalBlobStoreConfig`, wiring `NuskaLocalDiskBlobStoreRepository` from `blobstore.local.folder` (used for tests and local dev).
@@ -44,4 +44,4 @@ The role-assignment extractor is selected at runtime by `nuska.security.role.ass
 
 ## Deployment
 
-Helm chart lives in `helm/nuska/`; per-env overrides are in `helm/nuska/env/values-kub-ent-{dev,tst,prd}.yaml`. The Dockerfile uses Spring Boot layered jars extracted by `java -Djarmode=tools ... extract --layers` on top of `bellsoft/liberica-openjre-alpine:25.0.5.0.3-5`. CI (`.github/workflows/push.yml`) runs `mvn verify`, uploads the jar, runs SonarCloud, lints/publishes the OpenAPI spec via `entur/gha-api`, then builds and pushes the Docker image via `entur/gha-docker`.
+CI (`.github/workflows/push.yml`) runs `mvn verify`, uploads the jar, runs SonarCloud, and lints/publishes the OpenAPI spec via `entur/gha-api`. The Docker image, Helm chart and Terraform config live in the separate `nuska-deployment-config` repository, which builds, pushes and deploys the image.
