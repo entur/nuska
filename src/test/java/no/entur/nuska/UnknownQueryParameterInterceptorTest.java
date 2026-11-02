@@ -39,7 +39,8 @@ class UnknownQueryParameterInterceptorTest {
       );
     NuskaController controller = new NuskaController(
       mock(NuskaAuthorizationService.class),
-      blobStoreService
+      blobStoreService,
+      "new"
     );
     mockMvc =
       MockMvcBuilders

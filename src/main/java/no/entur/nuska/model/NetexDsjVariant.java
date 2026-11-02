@@ -10,6 +10,9 @@ import no.entur.nuska.BadRequestException;
  * The import pipeline stores every uploaded dataset in three folders of the bucket: the dataset as
  * uploaded (NeTEx 1.16 after the upgrade), a copy downgraded to NeTEx 1.15, and a copy of one of
  * these two variants in the default folder.
+ * <p>
+ * The variant served when the {@code dsjcompatibility} request parameter is omitted is configured
+ * by the property {@code nuska.netex.dsj.default-variant} (NeTEx 1.16 unless overridden).
  */
 public enum NetexDsjVariant {
   /**
@@ -42,12 +45,16 @@ public enum NetexDsjVariant {
    * Resolve the {@code dsjcompatibility} request parameter of the timetable API.
    *
    * @param dsjCompatibility the request parameter, {@code legacy} or {@code new}; null or blank for
-   *                         the default variant.
+   *                         the configured default variant.
+   * @param defaultVariant   the variant returned when the parameter is omitted.
    * @throws BadRequestException if the parameter has another value.
    */
-  public static NetexDsjVariant resolve(String dsjCompatibility) {
+  public static NetexDsjVariant resolve(
+    String dsjCompatibility,
+    NetexDsjVariant defaultVariant
+  ) {
     if (dsjCompatibility == null || dsjCompatibility.isBlank()) {
-      return DEFAULT;
+      return defaultVariant;
     }
     NetexDsjVariant variant;
     try {
@@ -66,5 +73,30 @@ public enum NetexDsjVariant {
       );
     }
     return variant;
+  }
+
+  /**
+   * Parse the configuration property {@code nuska.netex.dsj.default-variant}, selecting the
+   * variant returned when the {@code dsjcompatibility} request parameter is omitted.
+   *
+   * @param value {@code default}, {@code legacy} or {@code new}, case-insensitive.
+   * @throws IllegalArgumentException if the value is null, blank or unknown.
+   */
+  public static NetexDsjVariant fromConfiguration(String value) {
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException(
+        "Missing value for property nuska.netex.dsj.default-variant, expected default, legacy or new"
+      );
+    }
+    try {
+      return NetexDsjVariant.valueOf(value.trim().toUpperCase(Locale.ROOT));
+    } catch (IllegalArgumentException e) {
+      throw new IllegalArgumentException(
+        "Invalid value for property nuska.netex.dsj.default-variant: '" +
+        value +
+        "', expected default, legacy or new",
+        e
+      );
+    }
   }
 }

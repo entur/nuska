@@ -20,6 +20,11 @@ resources:
 configMapMount:
   name: nuska-config
 
+netex:
+  # NeTEx variant served when the dsjcompatibility request parameter is omitted:
+  # new (NeTEx 1.16), legacy (NeTEx 1.15) or default (variant selected by the import pipeline)
+  dsjDefaultVariant: new
+
 image:
   identifier: <+artifacts.primary.image>
   imagePullPolicy: Always

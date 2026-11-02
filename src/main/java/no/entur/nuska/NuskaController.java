@@ -10,6 +10,7 @@ import no.entur.nuska.security.NuskaAuthorizationService;
 import no.entur.nuska.service.NisabaBlobStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -30,13 +31,20 @@ class NuskaController implements TimetableDataApi {
 
   private final NuskaAuthorizationService authorizationService;
   private final NisabaBlobStoreService blobStoreService;
+  private final NetexDsjVariant defaultVariant;
 
   public NuskaController(
     NuskaAuthorizationService authorizationService,
-    NisabaBlobStoreService blobStoreService
+    NisabaBlobStoreService blobStoreService,
+    @Value("${nuska.netex.dsj.default-variant:new}") String defaultVariant
   ) {
     this.authorizationService = authorizationService;
     this.blobStoreService = blobStoreService;
+    this.defaultVariant = NetexDsjVariant.fromConfiguration(defaultVariant);
+    LOGGER.info(
+      "Datasets are served from the folder '{}' when the dsjcompatibility parameter is omitted",
+      this.defaultVariant.subPath()
+    );
   }
 
   @GetMapping(
@@ -119,12 +127,16 @@ class NuskaController implements TimetableDataApi {
     String dsjCompatibility
   ) {
     new RequestValidator(codespace, importKey).validate();
-    NetexDsjVariant variant = NetexDsjVariant.resolve(dsjCompatibility);
+    NetexDsjVariant variant = NetexDsjVariant.resolve(
+      dsjCompatibility,
+      defaultVariant
+    );
 
     LOGGER.info(
-      "Received request to download timetable data for codespace '{}' (dsjcompatibility={})",
+      "Received request to download timetable data for codespace '{}' (dsjcompatibility={}, variant={})",
       codespace,
-      dsjCompatibility
+      dsjCompatibility,
+      variant
     );
 
     try {

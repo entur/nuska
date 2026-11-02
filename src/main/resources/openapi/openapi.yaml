@@ -129,10 +129,10 @@ paths:
           Structure of DatedServiceJourney in the returned dataset, during the
           transition to NeTEx 1.16: `legacy` returns the NeTEx 1.15 copy of the
           dataset, `new` returns the NeTEx 1.16 dataset. If the parameter is
-          omitted, the dataset is returned in the variant selected as default by
-          the import pipeline. When the requested variant is not available for a
-          given dataset - typically a dataset imported before the transition
-          started - the default variant is returned instead.
+          omitted, the NeTEx 1.16 dataset is returned. When the requested
+          variant is not available for a given dataset - typically a dataset
+          imported before the transition started - the variant selected as
+          default by the import pipeline is returned instead.
         required: false
         schema:
           type: string
@@ -249,10 +249,10 @@ paths:
           Structure of DatedServiceJourney in the returned dataset, during the
           transition to NeTEx 1.16: `legacy` returns the NeTEx 1.15 copy of the
           dataset, `new` returns the NeTEx 1.16 dataset. If the parameter is
-          omitted, the dataset is returned in the variant selected as default by
-          the import pipeline. When the requested variant is not available for a
-          given dataset - typically a dataset imported before the transition
-          started - the default variant is returned instead.
+          omitted, the NeTEx 1.16 dataset is returned. When the requested
+          variant is not available for a given dataset - typically a dataset
+          imported before the transition started - the variant selected as
+          default by the import pipeline is returned instead.
         required: false
         schema:
           type: string

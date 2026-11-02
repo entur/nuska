@@ -53,7 +53,7 @@ NeTEx 1.16 changes the structure of `DatedServiceJourney` in a non backward-comp
 * `imported-dsj-legacy/`: the dataset downgraded to NeTEx 1.15
 * `imported-dsj-new/`: the dataset as uploaded (NeTEx 1.16 after the upgrade)
 
-The two download endpoints accept the query parameter `dsjcompatibility` to select the variant: `legacy` returns the NeTEx 1.15 copy, `new` returns the NeTEx 1.16 dataset, and omitting the parameter returns the dataset from the default folder. Any other value is rejected with `400 Bad Request`. When the requested variant is not available for a dataset - typically a dataset imported before the transition started - the default folder is used as a fallback.
+The two download endpoints accept the query parameter `dsjcompatibility` to select the variant: `legacy` returns the NeTEx 1.15 copy, `new` returns the NeTEx 1.16 dataset. Any other value is rejected with `400 Bad Request`. When the parameter is omitted, the variant configured by the property `nuska.netex.dsj.default-variant` is returned: `new` (NeTEx 1.16, the default and the value set in the Helm chart through `netex.dsjDefaultVariant`), `legacy` (NeTEx 1.15) or `default` (the folder selected by the import pipeline). When the requested variant is not available for a dataset - typically a dataset imported before the transition started - the default folder is used as a fallback.
 
 The version listing endpoint always reads the default folder: the same import keys are used in the three folders.
 
