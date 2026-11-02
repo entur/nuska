@@ -49,7 +49,7 @@ Nuska is a Spring Boot REST API service that provides authenticated access to or
 
 NeTEx 1.16 changes the structure of `DatedServiceJourney` in a non backward-compatible way. While consumers migrate, the Marduk import pipeline stores every uploaded dataset in three folders of the nisaba bucket:
 
-* `imported/`: the default folder, holding the variant selected by the import pipeline (NeTEx 1.15 during the transition)
+* `imported/`: the default folder, holding the variant selected by the import pipeline: NeTEx 1.16 for datasets imported since the pipeline switched its default variant to 1.16, NeTEx 1.15 for datasets imported earlier (existing datasets are not rewritten)
 * `imported-dsj-legacy/`: the dataset downgraded to NeTEx 1.15
 * `imported-dsj-new/`: the dataset as uploaded (NeTEx 1.16 after the upgrade)
 
