@@ -25,7 +25,7 @@ Nuska is a Spring Boot REST API service that provides authenticated access to or
 - **Maven** - Build automation
 - **OpenAPI 3.1** - API specification
 - **Google Cloud Storage** - Primary blob storage
-- **Docker** - Containerization with Liberica JRE 25
+- **Docker** - Containerization on a distroless Java 25 runtime (`gcr.io/distroless/java25-debian13:nonroot`)
 - **Helm** - Kubernetes deployment
 
 ## Architecture
@@ -98,12 +98,14 @@ Key configuration properties:
 ## Docker
 
 ```bash
-# Build Docker image
-docker build -t nuska:latest .
+# Build Docker image (the Dockerfile copies the jar from target/)
+mvn verify && docker build -t nuska:latest .
 
 # Run container
 docker run -p 8080:8080 nuska:latest
 ```
+
+The runtime image is distroless: no shell or package manager. For a shell, build with the `debug-nonroot` tag of the same base image, or use `kubectl debug` with an ephemeral container in the cluster.
 
 ## Deployment
 
