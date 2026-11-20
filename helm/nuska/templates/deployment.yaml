@@ -32,7 +32,7 @@ spec:
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
           env:
             - name: JDK_JAVA_OPTIONS
-              value: -server -Xss{{ .Values.resources.xss }} -Xmx{{ .Values.resources.xmx }} -XX:-UseBASE64Intrinsics -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:ActiveProcessorCount=2
+              value: -server -Xss{{ .Values.resources.xss }} -Xmx{{ .Values.resources.xmx }} -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:ActiveProcessorCount=2
                  -Dspring.config.location=/etc/application-config/application.properties
                  -Dfile.encoding=UTF-8
             - name: TZ
