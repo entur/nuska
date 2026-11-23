@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.entur.ror</groupId>
 		<artifactId>superpom</artifactId>
-		<version>7.2.0</version>
+		<version>7.6.0</version>
 	</parent>
 
 	<groupId>no.entur</groupId>
@@ -25,8 +25,8 @@
 		<prettier-java.version>2.1.0</prettier-java.version>
 		<prettier-maven-plugin.version>0.22</prettier-maven-plugin.version>
 		<plugin.prettier.goal>write</plugin.prettier.goal>
-		<sonar-maven-plugin.version>5.8.0.7211</sonar-maven-plugin.version>
-		<openapi-generator-version>7.26.0</openapi-generator-version>
+		<sonar-maven-plugin.version>5.9.0.7382</sonar-maven-plugin.version>
+		<openapi-generator-version>7.27.0</openapi-generator-version>
 		<swagger-annotations-jakarta.version>2.2.56</swagger-annotations-jakarta.version>
 
 	</properties>
@@ -135,7 +135,7 @@
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-nio</artifactId>
-			<version>0.140.0</version>
+			<version>0.143.0</version>
 			<scope>test</scope>
 		</dependency>
 
